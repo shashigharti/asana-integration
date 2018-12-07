@@ -1,7 +1,8 @@
 let express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
-    request = require('request');
+    request = require('request')
+    Airtable = require('airtable');
 
 const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
@@ -41,6 +42,7 @@ app.post('/slack/actions', (req, res) => {
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
                     logger.info('last sectionn');
+                    logger.info(config.airtable.api_key);
 
 
                     let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
