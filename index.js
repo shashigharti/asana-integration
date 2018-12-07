@@ -47,7 +47,7 @@ app.post('/slack/actions', (req, res) => {
                     base('Developers').create({
                         "Name": metric.name,
                         "Task": metric.task + " https://app.asana.com/0/1/" + task_id,
-                        "Project": metric.project,
+                        "Project": '',
                         "Quality": metric.quality,
                         "Speed": metric.speed,
                         "Communication": metric.communication,
