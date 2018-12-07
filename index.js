@@ -41,22 +41,11 @@ app.post('/slack/actions', (req, res) => {
                     logger.info("count" + questions_count);
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
-                    logger.info('last sectionn');
-                    logger.info(config.airtable.api_key);
-
+                    logger.info('last section');
 
                     let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
-                    logger.info(JSON.stringify({
-                        "Name": metric.name,
-                        "Task": metric.task,// "https://app.asana.com/0/1/" + task_id,
-                        "Project": metric.project,
-                        "Quality": metric.quality,
-                        "Speed": metric.speed,
-                        "Communication": metric.communication,
-                        "Timestamp": metric.timestamp
-                    }));
 
-                    base('Developers').create({
+                    base('Developers').create(JSON.stringify({
                         "Name": metric.name,
                         "Task": metric.task,// "https://app.asana.com/0/1/" + task_id,
                         "Project": metric.project,
@@ -64,13 +53,15 @@ app.post('/slack/actions', (req, res) => {
                         "Speed": metric.speed,
                         "Communication": metric.communication,
                         "Timestamp": metric.timestamp
-                    }, function (err, record) {
+                    }), function (err, record) {
                         if (err) {
                             console.error(err);
                             return;
                         }
                         logger.log(record.getId());
                     });
+
+                    logger.info('end');
 
 
 
