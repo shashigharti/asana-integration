@@ -5,13 +5,8 @@ let request = require('request');
 
 const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
-const question = require('./routes/questions.js');
 const metric = require('./routes/metrics.js');
-let questions_count = 0;// require('./routes/common.js');
-let previous_question = {
-    type:'',
-    name:''
-};
+let question_counts = require('./app/utils/common.js');
 
 
 app.use(bodyParser.json()); // for parsing application/json
@@ -128,8 +123,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                     selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                     logger.info(selected_pms_for_the_task);
 
-                    slackapi.askQuestion(selected_pms_for_the_task);
-                    questions_count++;
+                    slackapi.askQuestion(selected_pms_for_the_task, 1);
                 }
             });
 

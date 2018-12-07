@@ -27,9 +27,9 @@ class SlackAPI {
                 logger.info('default');
         }
     }
-    askQuestion(pms){
+    askQuestion(pms, number){
         let endPoint = config.slack.bot.post_message_url;
-        let attachments = question.getQuestion(1);
+        let attachments = question.getQuestion(number);
         let message = '';
         pms.forEach(function (slack_id_of_pm) {
             message = {
@@ -40,12 +40,13 @@ class SlackAPI {
             logger.info(JSON.stringify(message));
             slackapi.sendMessageToSlack(endPoint, message);
         });
-       // questions_count++;
+        questions_count++;
     }
 }
 
-let logger = require('./../app/utils/logger.js');
-//let questions_count = require('./../app/utils/common.js');
-let config = require('./../config.js');
-let request = require('request');
+const question = require('./questions.js');
+const logger = require('./../app/utils/logger.js');
+let questions_count = require('./../app/utils/common.js');
+const config = require('./../config.js');
+const request = require('request');
 module.exports = new SlackAPI();
