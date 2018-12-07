@@ -47,8 +47,6 @@ app.post('/slack/actions', (req, res) => {
                 logger.info('default');
         }
         logger.info(metric.getMetrics());
-
-        slackapi.askQuestion(selected_pms_for_the_task, questions_count);
     }
 
 });
