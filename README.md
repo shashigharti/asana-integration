@@ -28,7 +28,22 @@ Once the validation is done, the events are sent to the specified url by asana.
 
 ### Configure Airtable API
 
+To get API Key of Airtable go to Airtable->account.
 
 
+### Setup
+1. config.js contains all the access tokens and configuration params.
+2. run npm install
+3. install pm2 (node process manager)
+4. index.js is the main file
+5. To start the node server run
+pm2 start index.js
 
-### Set Nodejs Server (Nginx Proxy and SSL)
+### Dependencies
+1. airtable
+2. body-parser
+3. express
+4. node-datetime
+5. request
+6. winston
+
