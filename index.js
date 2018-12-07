@@ -98,9 +98,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                     followers.push(follower.name);
                 });
 
-                followers.push('Elad Hefetz');   // For testing
                 logger.info(followers);
-                //let followers = ['Elad Hefetz', 'Shashi Gharti'];
 
                 // Configure the request
                 let options = {
@@ -140,7 +138,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                         //log slack ids of PM
                         //logger.info(selected_pms_for_the_task);
 
-                        selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
+                        //selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                         logger.info(selected_pms_for_the_task);
 
                         slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
