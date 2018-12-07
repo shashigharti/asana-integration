@@ -1,7 +1,7 @@
 class AirtableAPI {
     create(task_id, data) {
         let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
-        console.log('testing');
+        logger.info('testing');
 
         base('Developers').create({
             "Name": data.name,
@@ -16,7 +16,7 @@ class AirtableAPI {
                 console.error(err);
                 return;
             }
-            console.log(record.getId());
+            logger.log(record.getId());
         });
     }
 }
