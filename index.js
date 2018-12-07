@@ -85,6 +85,7 @@ app.post('/asana/receive-webhook', (req, res) => {
         if (!error && response.statusCode === 200) {
 
             let task_details = JSON.parse(body);
+            console.log(task_details.completed);
 
             if (task_details.completed === true) {
                 metric.setTask(task_details.data.name); //set task name
