@@ -31,6 +31,7 @@ class SlackAPI {
         let endPoint = config.slack.bot.post_message_url;
         let attachments = question.getQuestion(number);
         let message = '';
+        let $this = this;
         pms.forEach(function (slack_id_of_pm) {
             message = {
                 "text": "Who is the active programmer for project .....?",
@@ -38,7 +39,7 @@ class SlackAPI {
                 "attachments": attachments
             };
             logger.info(JSON.stringify(message));
-            this.sendMessageToSlack(endPoint, message);
+            $this.sendMessageToSlack(endPoint, message);
         });
         questions_count++;
     }

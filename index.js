@@ -6,8 +6,10 @@ let request = require('request');
 const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
 const metric = require('./routes/metrics.js');
-let question_counts = require('./app/utils/common.js');
-
+let questions_count = 0;
+let max_question = 4;
+let selected_pms_for_the_task = [];
+let previous_question = '';
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -18,37 +20,37 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    if(questions_count <= 4){
-        // parse URL-encoded payload JSON string
-        let actionJSONPayload = JSON.parse(req.body.payload)
+    let actionJSONPayload = JSON.parse(req.body.payload)
 
-        logger.info(JSON.stringify(actionJSONPayload)); //testing
-        logger.info(metric.getMetrics()); //testing
+    logger.info(JSON.stringify(actionJSONPayload)); //testing
+    logger.info(metric.getMetrics()); //testing
 
-        //Get Metric Type
-        let type = actionJSONPayload.callback_id;
+    //Get Metric Type
+    let type = actionJSONPayload.callback_id;
 
-        switch (type) {
-            case 'active_programmer_selection':
-                metric.setName(slackapi.getSelectedValue(type));
-                break;
-            case 'metric_rating':
-                logger.info('metric_rating');
-                return 0;
-            case 'metric_type':
-                logger.info('metric_type');
-                return 'communication';
-            default:
-                logger.info('default');
-        }
-        metric.setMetrics(type, selected_value);
-        logger.info(metric.getMetrics()); //testing
-
-        logger.info('Ask Question' + questions_count);
+    switch (type) {
+        case 'active_programmer_selection':
+            metric.setName(slackapi.getSelectedValue(type));
+            break;
+        case 'metric_rating':
+            logger.info('metric_rating');
+            metric.setMetricByType(previous_question, 1);
+            break;
+        case 'metric_type':
+            logger.info('metric_type');
+            previous_question = 'communication';
+            break;
+        default:
+            logger.info('default');
     }
-    //sendMessageToSlackResponseURL(actionJSONPayload.response_url, message);
-});
+    logger.info(metric.getMetrics());
 
+    if(questions_count <= max_question){
+        slackapi.askQuestion(selected_pms_for_the_task, questions_count);
+        questions_count++;
+    }
+
+});
 
 
 app.post('/asana/receive-webhook', (req, res) => {
@@ -101,7 +103,6 @@ app.post('/asana/receive-webhook', (req, res) => {
 
                 if (!error && response.statusCode === 200) {
                     let pm_data = JSON.parse(body);
-                    let selected_pms_for_the_task = [];
 
                     //map pms name with slack ids
                     pm_data.records.forEach(function (pm) {
@@ -124,6 +125,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                     logger.info(selected_pms_for_the_task);
 
                     slackapi.askQuestion(selected_pms_for_the_task, 1);
+                    questions_count++;
                 }
             });
 

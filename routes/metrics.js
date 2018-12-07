@@ -7,7 +7,7 @@ class Metrics {
     setName(name){
         this.name = name;
     }
-    setMetricType(type, value) {
+    setMetricByType(type, value) {
         switch (type) {
             case 'communication':
                 this.communication = value;
