@@ -85,7 +85,6 @@ app.post('/asana/receive-webhook', (req, res) => {
         if (!error && response.statusCode === 200) {
 
             let task_details = JSON.parse(body);
-            console.log(task_details);
 
             if (task_details.data.completed === true) {
                 task = task_details.data.name;
