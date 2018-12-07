@@ -1,10 +1,11 @@
 class AirtableAPI {
     create(task_id, data) {
         let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
+        console.log('testing');
 
         base('Developers').create({
             "Name": data.name,
-            "Task": data.task + "https://app.asana.com/0/1/" + task_id,
+            "Task": data.task,// "https://app.asana.com/0/1/" + task_id,
             "Project": data.project,
             "Quality": data.quality,
             "Speed": data.speed,
