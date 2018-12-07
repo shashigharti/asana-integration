@@ -3,14 +3,44 @@ let app = express();
 let bodyParser = require('body-parser');
 let request = require('request');
 
-let config = require('./config.js');
-let SlackAPI = require('./routes/slack.js');
+const config = require('./config.js');
+const SlackAPI = require('./routes/slack.js');
+const Message = require('./routes/messages.js');
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 let logger = require('./app/utils/logger.js');
 
-app.post('/asana/receive-webhook', function (req, res) {
+
+app.post('/slack/actions', (req, res) => {
+    // send respond with 200 status
+    res.status(200).end();
+
+    // parse URL-encoded payload JSON string
+    let actionJSONPayload = JSON.parse(req.body.payload);
+
+    switch (actionJSONPayload.callback_id) {
+        case 'active_programmer_selection':
+            logger.info('active_programmer_selection');
+            programmer_name =  actionJSONPayload.actions[0].name;
+            logger.info(programmer_name);
+
+            break;
+        case 'metric_selection':
+            logger.info('metric_selection');
+            break;
+        case 'metric_rating':
+            logger.info('metric_rating');
+            break;
+        default:
+            logger.info('default');
+    }
+    //sendMessageToSlackResponseURL(actionJSONPayload.response_url, message);
+});
+
+
+
+app.post('/asana/receive-webhook', (req, res) => {
 
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
@@ -83,33 +113,9 @@ app.post('/asana/receive-webhook', function (req, res) {
                     logger.info(selected_pms_for_the_task);
 
                     let endPoint = config.slack.bot.post_message_url;
-                    let attachments = [
-                        {
-                            "text": "Choose active programmer",
-                            "color": "#3AA3E3",
-                            "attachment_type": "default",
-                            "callback_id": "active_programmer_selection",
-                            "actions": [
-                                {
-                                    "name": "programmers_list",
-                                    "text": "Pick a programmer...",
-                                    "type": "select",
-                                    "options": [
-                                        {
-                                            "text": "Developer 1",
-                                            "value": "developer1"
-                                        },
-                                        {
-                                            "text": "Developer 2",
-                                            "value": "developer2"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ];
+                    let attachments = Message.generateQuestion();
                     let message = '';
-                    selected_pms_for_the_task.forEach(function(slack_id_of_pm){
+                    selected_pms_for_the_task.forEach(function (slack_id_of_pm) {
                         message = {
                             "text": "Who is the active programmer for project .....?",
                             "channel": slack_id_of_pm,
@@ -123,12 +129,7 @@ app.post('/asana/receive-webhook', function (req, res) {
 
         }
     });
-
-
-    //convert the response in JSON format
-    res.end(JSON.stringify('test'));
-
-
+    res.send('success');
 });
 
 app.listen(config.server.port, config.server.hostname);
