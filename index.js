@@ -46,7 +46,7 @@ app.post('/slack/actions', (req, res) => {
 
                     base('Developers').create({
                         "Name": metric.name,
-                        "Task": "Include task name with Asana URL hyperlink",
+                        "Task": metric.task + " https://app.asana.com/0/1/" + task_id,
                         "Project": "Check Project ID",
                         "Quality": "1-5 Rating, pulled from Slack",
                         "Speed": "1-5 Rating, pulled from Slack",
