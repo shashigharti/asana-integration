@@ -63,7 +63,6 @@ class Question {
                         }
                     ]
                 };
-
             case 3:
                 return {
                     "channel": slack_id_of_pm,
@@ -107,6 +106,11 @@ class Question {
                             ]
                         }
                     ]
+                };
+            case 4:
+                return {
+                    "text": "Thank you for the feedback",
+                    "channel": slack_id_of_pm
                 };
             default:
                 return '';

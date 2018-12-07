@@ -23,12 +23,12 @@ app.post('/slack/actions', (req, res) => {
     if(questions_count <= max_question){
         let actionJSONPayload = JSON.parse(req.body.payload);
 
-        logger.info(JSON.stringify(actionJSONPayload)); //testing
-        logger.info(metric.getMetrics()); //testing
+        logger.info(JSON.stringify(actionJSONPayload));
 
         //Get Metric Type
         let type = actionJSONPayload.callback_id;
 
+        //Set value and ask question based on step and user's reaction
         switch (type) {
             case 'active_programmer_selection':
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
@@ -47,6 +47,9 @@ app.post('/slack/actions', (req, res) => {
                 logger.info('default');
         }
         logger.info(metric.getMetrics());
+    }else{
+        //end the communication
+        slackapi.sayThanks(selected_pms_for_the_task, 4);
     }
 
 });
@@ -62,7 +65,7 @@ app.post('/asana/receive-webhook', (req, res) => {
     }
 
     let task_id = req.body.events[0].resource;
-    logger.info(task_id);
+    //logger.info(task_id);
 
     // Configure the request
     let options = {
