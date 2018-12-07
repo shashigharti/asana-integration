@@ -1,14 +1,5 @@
 class AirtableAPI {
     create(task_id, data) {
-        message = {
-            Name: data.name,
-            Task: data.task,
-            Project: data.project,
-            Quality: data.quality,
-            Speed: data.speed,
-            Communication: data.communication,
-            Timestamp: data.timestamp
-        };
         let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
 
         base('Developers').create({
