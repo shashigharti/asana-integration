@@ -41,6 +41,7 @@ app.post('/slack/actions', (req, res) => {
                     logger.info("count" + questions_count);
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
+                    logger.info('last section');
                     slackapi.sayThanks(selected_pms_for_the_task, 4);
                     airtableapi.create(JSON.stringify(metric.getMetrics()));
                 }
