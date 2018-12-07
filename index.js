@@ -36,8 +36,8 @@ app.post('/slack/actions', (req, res) => {
                 break;
             case 'metric_rating':
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
+                questions_count++;
                 if (questions_count < max_question) {
-                    questions_count++;
                     logger.info("count" + questions_count);
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
@@ -85,6 +85,7 @@ app.post('/asana/receive-webhook', (req, res) => {
         if (!error && response.statusCode === 200) {
 
             let task_details = JSON.parse(body);
+            logger.info(task_details.completed === true);
 
             metric.setTask(task_details.data.name); //set task name
             metric.setTimestamp(Date.now()); //set time stamp

@@ -27,13 +27,13 @@ class SlackAPI {
                 logger.info('default');
         }
     }
-    askFirstQuestion(programmers, pms, number){
+    askFirstQuestion(programmers, pms, number, task){
         //logger.info('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
         let $this = this;
         pms.forEach(function (slack_id_of_pm) {
-            message = question.getFirstQuestion(programmers, slack_id_of_pm, number);
+            message = question.getFirstQuestion(programmers, slack_id_of_pm, number, task);
             logger.info("message:" + JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });

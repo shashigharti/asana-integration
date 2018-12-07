@@ -1,7 +1,7 @@
 class Question {
-    getFirstQuestion(programmers, slack_id_of_pm, number){
+    getFirstQuestion(programmers, slack_id_of_pm, number, task){
         return {
-            "text": "Who is the active programmer for project .....?",
+            "text": "Who is the active programmer for " + task + "?",
             "channel": slack_id_of_pm,
             "attachments": [
                 {
