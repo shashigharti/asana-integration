@@ -12,7 +12,7 @@ class SlackAPI {
             }
         })
     }
-    getSelectedValue(type){
+    getSelectedValue(type,actionJSONPayload){
         switch (type) {
             case 'active_programmer_selection':
                 logger.info('active_programmer_selection');

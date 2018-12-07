@@ -30,8 +30,7 @@ app.post('/slack/actions', (req, res) => {
 
     switch (type) {
         case 'active_programmer_selection':
-            metric.setName(slackapi.getSelectedValue(type));
-            logger.info('testing');
+            metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
             break;
         case 'metric_rating':
             metric.setMetricByType(previous_question, 1);
