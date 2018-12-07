@@ -1,5 +1,6 @@
 class AirtableAPI {
     create(data) {
+        logger.info(data);
         let options = {
             url: config.airtable.base_url,
             method: 'POST',
