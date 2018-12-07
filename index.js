@@ -9,6 +9,8 @@ const metric = require('./routes/metrics.js');
 let questions_count = 0;
 let max_question = 4;
 let selected_pms_for_the_task = [];
+let followers = [];
+let programmers = [];
 let previous_question = '';
 
 app.use(bodyParser.json()); // for parsing application/json
@@ -37,7 +39,11 @@ app.post('/slack/actions', (req, res) => {
             case 'metric_rating':
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
                 questions_count++;
-                slackapi.askQuestion(selected_pms_for_the_task, 2);
+                if(questions_count <= max_question) {
+                    slackapi.askQuestion(selected_pms_for_the_task, 2);
+                }else{
+                    slackapi.sayThanks(selected_pms_for_the_task, 4);
+                }
                 break;
             case 'metric_type':
                 previous_question = slackapi.getSelectedValue(type, actionJSONPayload);
@@ -47,9 +53,6 @@ app.post('/slack/actions', (req, res) => {
                 logger.info('default');
         }
         logger.info(metric.getMetrics());
-    }else{
-        //end the communication
-        slackapi.sayThanks(selected_pms_for_the_task, 4);
     }
 
 });
@@ -76,7 +79,6 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     // Get followers of the task
     request(options, function (error, response, body) {
-        let followers = [];
         let selected_pm_for_the_task = [];
 
         if (!error && response.statusCode === 200) {
@@ -117,6 +119,11 @@ app.post('/asana/receive-webhook', (req, res) => {
                         logger.info(follower);
                         if (pms[follower] !== undefined) {
                             selected_pms_for_the_task.push(pms[follower]); //get the slack id of the PM
+                        }else{
+                            programmers.push({
+                                text : follower,
+                                value: follower
+                            });
                         }
                     });
 
@@ -126,7 +133,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                     selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                     logger.info(selected_pms_for_the_task);
 
-                    slackapi.askQuestion(selected_pms_for_the_task, 1);
+                    slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1);
                     questions_count++;
                 }
             });

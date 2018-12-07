@@ -27,6 +27,17 @@ class SlackAPI {
                 logger.info('default');
         }
     }
+    askFirstQuestion(programmers, pms, number){
+        //logger.info('Ask Question ' + number);
+        let endPoint = config.slack.bot.post_message_url;
+        let message = '';
+        let $this = this;
+        pms.forEach(function (slack_id_of_pm) {
+            message = question.getFirstQuestion(programmers, slack_id_of_pm, number);
+            logger.info("message:" + JSON.stringify(message));
+            $this.sendMessageToSlack(endPoint, message);
+        });
+    }
     askQuestion(pms, number){
         //logger.info('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
@@ -37,7 +48,6 @@ class SlackAPI {
             logger.info("message:" + JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });
-        questions_count++;
     }
     sayThanks(){
         //logger.info('Say Thanks');
@@ -49,13 +59,11 @@ class SlackAPI {
             logger.info("message:" + JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });
-        questions_count++;
     }
 }
 
 const question = require('./questions.js');
 const logger = require('./../app/utils/logger.js');
-let questions_count = require('./../app/utils/common.js');
 const config = require('./../config.js');
 const request = require('request');
 module.exports = new SlackAPI();
