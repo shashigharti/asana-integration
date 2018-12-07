@@ -41,7 +41,30 @@ app.post('/slack/actions', (req, res) => {
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
                     logger.info('last section');
-                    airtableapi.create(task_id, JSON.stringify(metric.getMetrics()));
+
+
+                    let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
+                    let data = JSON.parse(JSON.stringify(metric.getMetrics()));
+
+                    base('Developers').create({
+                        "Name": data.name,
+                        "Task": data.task,// "https://app.asana.com/0/1/" + task_id,
+                        "Project": data.project,
+                        "Quality": data.quality,
+                        "Speed": data.speed,
+                        "Communication": data.communication,
+                        "Timestamp": data.timestamp
+                    }, function (err, record) {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                        logger.log(record.getId());
+                    });
+
+
+
+                    //airtableapi.create(task_id, JSON.stringify(metric.getMetrics()));
                     //slackapi.sayThanks(selected_pms_for_the_task, 4);
 
                 }
