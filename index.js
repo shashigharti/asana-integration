@@ -20,7 +20,7 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    if (questions_count < max_question) {
+    if (questions_count <= max_question) {
         let actionJSONPayload = JSON.parse(req.body.payload);
 
         logger.info(JSON.stringify(actionJSONPayload));
