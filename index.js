@@ -42,11 +42,10 @@ app.post('/slack/actions', (req, res) => {
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
                     logger.info('last section');
-
                     let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
 
                     base('Developers').create({
-                        "Name": "Developer 12",
+                        "Name": metric.name,
                         "Task": "Include task name with Asana URL hyperlink",
                         "Project": "Check Project ID",
                         "Quality": "1-5 Rating, pulled from Slack",
