@@ -1,0 +1,31 @@
+{
+  "name": "asana-slack-airtable-integration",
+  "version": "1.0.0",
+  "description": "Integrate Asana Tickets with Slack and Airtable",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shashigharti/asana-integration.git"
+  },
+  "keywords": [
+    "asana",
+    "slack",
+    "airtable",
+    "integration"
+  ],
+  "author": "Shashi (CodersClan)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shashigharti/asana-integration/issues"
+  },
+  "homepage": "https://github.com/shashigharti/asana-integration#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "request": "^2.88.0",
+    "winston": "^3.1.0"
+  }
+}
