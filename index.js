@@ -47,11 +47,11 @@ app.post('/slack/actions', (req, res) => {
                     base('Developers').create({
                         "Name": metric.name,
                         "Task": metric.task + " https://app.asana.com/0/1/" + task_id,
-                        "Project": "Check Project ID",
+                        "Project": metric.project,
                         "Quality": metric.quality,
                         "Speed": metric.speed,
                         "Communication": metric.communication,
-                        "Timestamp": "Time at which the rating was done"
+                        "Timestamp": metric.timestamp
                     }, function(err, record) {
                         if (err) { console.error(err); return; }
                         console.log(record.getId());
