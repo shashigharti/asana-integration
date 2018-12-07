@@ -4,9 +4,15 @@ let bodyParser = require('body-parser');
 let request = require('request');
 
 const config = require('./config.js');
-const SlackAPI = require('./routes/slack.js');
-const Message = require('./routes/messages.js');
+const slackapi = require('./routes/slack.js');
+const question = require('./routes/questions.js');
+const metric = require('./routes/metrics.js');
 let questions_count = 0;
+let status = {
+    question: '',
+    answer: '',
+    mode: ''
+};
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -17,29 +23,18 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    // parse URL-encoded payload JSON string
-    let actionJSONPayload = JSON.parse(req.body.payload)
-    logger.info(JSON.stringify(actionJSONPayload));
+    if(questions_count <= 7){
+        // parse URL-encoded payload JSON string
+        let actionJSONPayload = JSON.parse(req.body.payload)
 
-    //Add a new record in Airtable if all metrics are set
+        logger.info(JSON.stringify(actionJSONPayload)); //testing
+        logger.info(metric.getMetrics()); //testing
 
+        let type = actionJSONPayload.callback_id;
+        let selected_value = slackapi.getSelectedValue(type);
+        metric.setMetrics(type, selected_value);
 
-
-    switch (actionJSONPayload.callback_id) {
-        case 'active_programmer_selection':
-            logger.info('active_programmer_selection');
-            programmer_name =  actionJSONPayload.actions[0].selected_options[0];
-            logger.info(JSON.stringify(programmer_name));
-
-            break;
-        case 'metric_selection':
-            logger.info('metric_selection');
-            break;
-        case 'metric_rating':
-            logger.info('metric_rating');
-            break;
-        default:
-            logger.info('default');
+        logger.info('Ask Question' + questions_count);
     }
     //sendMessageToSlackResponseURL(actionJSONPayload.response_url, message);
 });
@@ -119,7 +114,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                     logger.info(selected_pms_for_the_task);
 
                     let endPoint = config.slack.bot.post_message_url;
-                    let attachments = Message.generateQuestion();
+                    let attachments = question.getQuestion(1);
                     let message = '';
                     selected_pms_for_the_task.forEach(function (slack_id_of_pm) {
                         message = {
@@ -128,7 +123,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                             "attachments": attachments
                         };
                         logger.info(JSON.stringify(message));
-                        SlackAPI.sendMessageToSlack(endPoint, message);
+                        slackapi.sendMessageToSlack(endPoint, message);
                     });
                     questions_count++;
                 }

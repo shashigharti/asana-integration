@@ -1,10 +1,13 @@
 class Metrics {
-    constructor(user_id){
-        this.user_id = user_id;
+    constructor(){
+        this.name = '';
         this.communication = 0;
         this.speed = 0;
     }
-    setMetric(type, value) {
+    setName(name){
+        this.name = name;
+    }
+    setMetrics(type, value) {
         switch (type) {
             case 'communication':
                 this.communication = value;
@@ -15,6 +18,9 @@ class Metrics {
             default:
                 break;
         }
+    }
+    getMetrics(){
+        return JSON.stringify(this);
     }
 }
 
