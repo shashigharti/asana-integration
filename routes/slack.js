@@ -35,7 +35,6 @@ class SlackAPI {
         pms.forEach(function (slack_id_of_pm) {
             message = question.getQuestion(slack_id_of_pm, number);
             logger.info("message:" + JSON.stringify(message));
-            logger.info(JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });
         questions_count++;

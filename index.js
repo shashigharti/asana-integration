@@ -120,7 +120,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                     });
 
                     //log slack ids of PM
-                    logger.info(selected_pms_for_the_task);
+                    //logger.info(selected_pms_for_the_task);
 
                     selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                     logger.info(selected_pms_for_the_task);
