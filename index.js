@@ -4,48 +4,11 @@ let bodyParser = require('body-parser');
 let request = require('request');
 
 let config = require('./config.js');
-/*const hostname = '127.0.0.1';
-const port = 3000;*/
+let SlackAPI = require('./routes/slack.js');
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
-
-const {createLogger, format, transports} = require('winston');
-const fs = require('fs');
-const path = require('path');
-
-const env = process.env.NODE_ENV || 'development';
-const logDir = 'log';
-
-// Create the log directory if it does not exist
-if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir);
-}
-
-const filename = path.join(logDir, 'results.log');
-
-const logger = createLogger({
-    // change level if in dev environment versus production
-    level: env === 'development' ? 'debug' : 'info',
-    format: format.combine(
-        format.timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss'
-        }),
-        format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
-    ),
-    transports: [
-        new transports.Console({
-            level: 'info',
-            format: format.combine(
-                format.colorize(),
-                format.printf(
-                    info => `${info.timestamp} ${info.level}: ${info.message}`
-                )
-            )
-        }),
-        new transports.File({filename})
-    ]
-});
+let logger = require('./app/utils/logger.js');
 
 app.post('/asana/receive-webhook', function (req, res) {
 
@@ -157,7 +120,7 @@ app.post('/asana/receive-webhook', function (req, res) {
                             "attachments": attachments
                         };
                         logger.info(JSON.stringify(message));
-                        sendMessageToSlack(endPoint, message);
+                        SlackAPI.sendMessageToSlack(endPoint, message);
                     });
                 }
             });
@@ -171,22 +134,5 @@ app.post('/asana/receive-webhook', function (req, res) {
 
 
 });
-
-function sendMessageToSlack(endPoint, message) {
-    let options = {
-        url: endPoint,
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer xoxb-495244200950-498222946918-8eGgrFVMF8HQ9SnuQ2fjReGJ',
-            'Content-Type': 'application/json'
-        },
-        json: message
-    };
-    request(options, (error, response, body) => {
-        if (error) {
-            // handle errors as you see fit
-        }
-    })
-}
 
 app.listen(config.server.port, config.server.hostname);
