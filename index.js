@@ -9,7 +9,7 @@ const airtableapi = require('./routes/airtable.js');
 const metric = require('./routes/metrics.js');
 let questions_count = 0, max_question = 4, selected_pms_for_the_task = [];
 let followers = [], programmers = [], previous_question = '';
-let task_name = '';
+let task = '';
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -85,10 +85,11 @@ app.post('/asana/receive-webhook', (req, res) => {
         if (!error && response.statusCode === 200) {
 
             let task_details = JSON.parse(body);
-            console.log(task_details.completed);
+            console.log(task_details);
 
-            if (task_details.completed === true) {
-                metric.setTask(task_details.data.name); //set task name
+            if (task_details.data.completed === true) {
+                task = task_details.data.name;
+                metric.setTask(task); //set task name
                 metric.setTimestamp(Date.now()); //set time stamp
                 metric.setProject(task_details.data.projects[0].name);
 
@@ -141,7 +142,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                         selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                         logger.info(selected_pms_for_the_task);
 
-                        slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1);
+                        slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
                         questions_count++;
 
                     }
