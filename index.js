@@ -45,7 +45,7 @@ app.post('/slack/actions', (req, res) => {
 
                     let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
                     let data = JSON.parse(JSON.stringify(metric.getMetrics()));
-                    console.log(JSON.stringify(data));
+                    logger.info(JSON.stringify(data));
 
                     base('Developers').create({
                         "Name": data.name,
