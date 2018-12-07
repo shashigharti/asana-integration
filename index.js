@@ -35,14 +35,14 @@ app.post('/slack/actions', (req, res) => {
                 slackapi.askQuestion(selected_pms_for_the_task, 2);
                 break;
             case 'metric_rating':
-                metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
                 questions_count++;
                 logger.info("count" + questions_count);
+                metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
                 if (questions_count <= max_question) {
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
-                    airtableapi.create(JSON.parse(metric.getMetrics()));
                     slackapi.sayThanks(selected_pms_for_the_task, 4);
+                    airtableapi.create(JSON.stringify(metric.getMetrics()));
                 }
                 break;
             case 'metric_type':
@@ -139,8 +139,9 @@ app.post('/asana/receive-webhook', (req, res) => {
                     selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                     logger.info(selected_pms_for_the_task);
 
-                    slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1);
                     questions_count++;
+                    slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1);
+
                 }
             });
 

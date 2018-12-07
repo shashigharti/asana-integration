@@ -4,7 +4,7 @@ class AirtableAPI {
             url: config.airtable.base_url,
             method: 'POST',
             headers: config.airtable.headers,
-            json: data
+            json: JSON.parse(data)
         };
         request(options, (error, response, body) => {
             if (error) {
