@@ -48,9 +48,9 @@ app.post('/slack/actions', (req, res) => {
                         "Name": metric.name,
                         "Task": metric.task + " https://app.asana.com/0/1/" + task_id,
                         "Project": "Check Project ID",
-                        "Quality": "1-5 Rating, pulled from Slack",
-                        "Speed": "1-5 Rating, pulled from Slack",
-                        "Communication": "1-5 Rating, pulled from Slack",
+                        "Quality": metric.quality,
+                        "Speed": metric.speed,
+                        "Communication": metric.communication,
                         "Timestamp": "Time at which the rating was done"
                     }, function(err, record) {
                         if (err) { console.error(err); return; }
