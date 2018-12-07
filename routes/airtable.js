@@ -1,23 +1,22 @@
 class AirtableAPI {
-    create(task_id, data) {
+    create(task_id, metric) {
         let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
-        logger.info(data);
+        let dt = dateTime.create();
+        let timestamp = dt.format('Y-m-d H:M:S');
 
         base('Developers').create({
-            "Name": data.name,
-            "Task": data.task,// "https://app.asana.com/0/1/" + task_id,
-            "Project": data.project,
-            "Quality": data.quality,
-            "Speed": data.speed,
-            "Communication": data.communication,
-            "Timestamp": data.timestamp
-        }, function (err, record) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            logger.log(record.getId());
+            "Name": metric.name,
+            "Task": metric.task + " https://app.asana.com/0/1/" + task_id,
+            "Project": metric.project,
+            "Quality": metric.quality,
+            "Speed": metric.speed,
+            "Communication": metric.communication,
+            "Timestamp": timestamp
+        }, function(err, record) {
+            if (err) { console.error(err); return; }
+            console.log(record.getId());
         });
+
     }
 }
 

@@ -2,8 +2,8 @@ let express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
     request = require('request')
-    Airtable = require('airtable')
-    dateTime = require('node-datetime');
+Airtable = require('airtable')
+dateTime = require('node-datetime');
 
 const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
@@ -43,24 +43,7 @@ app.post('/slack/actions', (req, res) => {
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
                     logger.info('last section');
-                    let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
-
-                    let dt = dateTime.create();
-                    let formatted = dt.format('Y-m-d H:M:S');
-
-                    base('Developers').create({
-                        "Name": metric.name,
-                        "Task": metric.task + " https://app.asana.com/0/1/" + task_id,
-                        "Project": metric.project,
-                        "Quality": metric.quality,
-                        "Speed": metric.speed,
-                        "Communication": metric.communication,
-                        "Timestamp": formatted
-                    }, function(err, record) {
-                        if (err) { console.error(err); return; }
-                        console.log(record.getId());
-                    });
-
+                    airtableapi.create(task_id, metric);
                     logger.info('end');
                 }
                 break;
