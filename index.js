@@ -7,12 +7,12 @@ const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
 const question = require('./routes/questions.js');
 const metric = require('./routes/metrics.js');
-let questions_count = 0;
-let status = {
-    question: '',
-    answer: '',
-    mode: ''
+let questions_count = 0;// require('./routes/common.js');
+let previous_question = {
+    type:'',
+    name:''
 };
+
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -23,16 +23,31 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    if(questions_count <= 7){
+    if(questions_count <= 4){
         // parse URL-encoded payload JSON string
         let actionJSONPayload = JSON.parse(req.body.payload)
 
         logger.info(JSON.stringify(actionJSONPayload)); //testing
         logger.info(metric.getMetrics()); //testing
 
+        //Get Metric Type
         let type = actionJSONPayload.callback_id;
-        let selected_value = slackapi.getSelectedValue(type);
+
+        switch (type) {
+            case 'active_programmer_selection':
+                metric.setName(slackapi.getSelectedValue(type));
+                break;
+            case 'metric_rating':
+                logger.info('metric_rating');
+                return 0;
+            case 'metric_type':
+                logger.info('metric_type');
+                return 'communication';
+            default:
+                logger.info('default');
+        }
         metric.setMetrics(type, selected_value);
+        logger.info(metric.getMetrics()); //testing
 
         logger.info('Ask Question' + questions_count);
     }
@@ -113,18 +128,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                     selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                     logger.info(selected_pms_for_the_task);
 
-                    let endPoint = config.slack.bot.post_message_url;
-                    let attachments = question.getQuestion(1);
-                    let message = '';
-                    selected_pms_for_the_task.forEach(function (slack_id_of_pm) {
-                        message = {
-                            "text": "Who is the active programmer for project .....?",
-                            "channel": slack_id_of_pm,
-                            "attachments": attachments
-                        };
-                        logger.info(JSON.stringify(message));
-                        slackapi.sendMessageToSlack(endPoint, message);
-                    });
+                    slackapi.askQuestion(selected_pms_for_the_task);
                     questions_count++;
                 }
             });
