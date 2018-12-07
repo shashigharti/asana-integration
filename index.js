@@ -28,7 +28,7 @@ app.post('/slack/actions', (req, res) => {
     switch (actionJSONPayload.callback_id) {
         case 'active_programmer_selection':
             logger.info('active_programmer_selection');
-            programmer_name =  actionJSONPayload.actions[0].name;
+            programmer_name =  actionJSONPayload.actions[0].selected_options[0];
             logger.info(programmer_name);
 
             break;
