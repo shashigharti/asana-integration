@@ -20,7 +20,7 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    if (questions_count <= max_question) {
+    if (questions_count < max_question) {
         let actionJSONPayload = JSON.parse(req.body.payload);
 
         logger.info(JSON.stringify(actionJSONPayload));
@@ -35,10 +35,10 @@ app.post('/slack/actions', (req, res) => {
                 slackapi.askQuestion(selected_pms_for_the_task, 2);
                 break;
             case 'metric_rating':
-                questions_count++;
-                logger.info("count" + questions_count);
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
                 if (questions_count <= max_question) {
+                    questions_count++;
+                    logger.info("count" + questions_count);
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
                     slackapi.sayThanks(selected_pms_for_the_task, 4);
@@ -139,8 +139,8 @@ app.post('/asana/receive-webhook', (req, res) => {
                     selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                     logger.info(selected_pms_for_the_task);
 
-                    questions_count++;
                     slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1);
+                    questions_count++;
 
                 }
             });
