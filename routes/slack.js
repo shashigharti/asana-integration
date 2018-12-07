@@ -19,10 +19,10 @@ class SlackAPI {
                 return actionJSONPayload.actions[0].selected_options[0].value;
             case 'metric_rating':
                 logger.info('metric_rating');
-                return 0;
+                return actionJSONPayload.actions[0].value;
             case 'metric_type':
                 logger.info('metric_type');
-                return 'communication';
+                return actionJSONPayload.actions[0].value;
             default:
                 logger.info('default');
         }
