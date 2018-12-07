@@ -17,7 +17,8 @@ app.post('/slack/actions', (req, res) => {
     res.status(200).end();
 
     // parse URL-encoded payload JSON string
-    let actionJSONPayload = JSON.parse(req.body.payload);
+    let actionJSONPayload = JSON.parse(req.body.payload)
+    logger.info(JSON.stringify(actionJSONPayload));
 
     switch (actionJSONPayload.callback_id) {
         case 'active_programmer_selection':
