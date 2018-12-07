@@ -36,7 +36,7 @@ app.post('/slack/actions', (req, res) => {
                 break;
             case 'metric_rating':
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
-                if (questions_count <= max_question) {
+                if (questions_count < max_question) {
                     questions_count++;
                     logger.info("count" + questions_count);
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
