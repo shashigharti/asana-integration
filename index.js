@@ -45,6 +45,23 @@ app.post('/slack/actions', (req, res) => {
 
                     let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
 
+                    base('Developers').create({
+                        "Name": "Developer 12",
+                        "Task": "Include task name with Asana URL hyperlink",
+                        "Project": "Check Project ID",
+                        "Quality": "1-5 Rating, pulled from Slack",
+                        "Speed": "1-5 Rating, pulled from Slack",
+                        "Communication": "1-5 Rating, pulled from Slack",
+                        "Timestamp": "Time at which the rating was done"
+                    }, function(err, record) {
+                        if (err) { console.error(err); return; }
+                        console.log(record.getId());
+                    });
+
+
+
+
+                   /* let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
                     base('Developers').create(JSON.stringify({
                         "Name": metric.name,
                         "Task": metric.task,// "https://app.asana.com/0/1/" + task_id,
@@ -60,14 +77,8 @@ app.post('/slack/actions', (req, res) => {
                         }
                         logger.log(record.getId());
                     });
-
+*/
                     logger.info('end');
-
-
-
-                    //airtableapi.create(task_id, JSON.stringify(metric.getMetrics()));
-                    //slackapi.sayThanks(selected_pms_for_the_task, 4);
-
                 }
                 break;
             case 'metric_type':
