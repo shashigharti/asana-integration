@@ -1,5 +1,5 @@
 ### Configure Asana Webhook
-Inorder to setup webhook for Asana events please follow the steps:
+To setup webhook for Asana, follow the steps below:
 
 1. Setup a server and enable ssl(https).
 2. Create a webhook by running the command as described in the doc: https://asana.com/developers/api-reference/webhooks#create
@@ -19,9 +19,12 @@ Once the validation is done, the events are sent to the specified url by asana.
 
 ### Configure Slack Interactive Messages and Bot
 
+1. Create a new slack app and enable 'bot' and 'interactive messages' feature for the app. To create a new slack app, go to https://api.slack.com/apps -> 'your apps' and create a new app.
 
+2. After the app is created, install it to the workspace. Whenever you make any new changes please reinstall the app.
 
-
+3. Inorder to send messages to slack users, use the token "Bot User OAuth Access Token". To find access token go to
+"your apps". Click on the app name -> install app.
 
 ### Configure Airtable API
 
