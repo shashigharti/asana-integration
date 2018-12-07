@@ -46,7 +46,7 @@ app.post('/slack/actions', (req, res) => {
 
 
                     let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
-                    logger.info({
+                    logger.info(JSON.stringify({
                         "Name": metric.name,
                         "Task": metric.task,// "https://app.asana.com/0/1/" + task_id,
                         "Project": metric.project,
@@ -54,7 +54,7 @@ app.post('/slack/actions', (req, res) => {
                         "Speed": metric.speed,
                         "Communication": metric.communication,
                         "Timestamp": metric.timestamp
-                    });
+                    }));
 
                     base('Developers').create({
                         "Name": metric.name,
