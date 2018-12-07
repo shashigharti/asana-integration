@@ -33,10 +33,10 @@ class Question {
                 };
             case 2:
                 return {
-                    "text": "Select a Metric",
                     "channel": slack_id_of_pm,
                     "attachments": [
                         {
+                            "text": "Select a Metric",
                             "callback_id": "metric_type",
                             "color": "#3AA3E3",
                             "attachment_type": "default",
@@ -66,7 +66,6 @@ class Question {
 
             case 3:
                 return {
-                    "text": "Select a Metric",
                     "channel": slack_id_of_pm,
                     "attachments": [
                         {
@@ -92,6 +91,18 @@ class Question {
                                     "text": "3",
                                     "type": "button",
                                     "value": "3"
+                                },
+                                {
+                                    "name": "4",
+                                    "text": "4",
+                                    "type": "button",
+                                    "value": "4"
+                                },
+                                {
+                                    "name": "5",
+                                    "text": "5",
+                                    "type": "button",
+                                    "value": "5"
                                 }
                             ]
                         }
