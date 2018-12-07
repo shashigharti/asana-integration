@@ -16,7 +16,7 @@ class SlackAPI {
         switch (type) {
             case 'active_programmer_selection':
                 logger.info('active_programmer_selection');
-                logger.info(JSON.stringify(actionJSONPayload));
+                //logger.info(JSON.stringify(actionJSONPayload));
                 return actionJSONPayload.actions[0].selected_options[0].value;
             case 'metric_rating':
                 logger.info('metric_rating');
