@@ -3,6 +3,7 @@ class Metrics {
         this.name = '';
         this.communication = 0;
         this.speed = 0;
+        this.quality = 0;
     }
     setName(name){
         this.name = name;
@@ -14,6 +15,9 @@ class Metrics {
                 break;
             case 'speed':
                 this.speed = value;
+                break;
+            case 'quality':
+                this.quality = value;
                 break;
             default:
                 break;
