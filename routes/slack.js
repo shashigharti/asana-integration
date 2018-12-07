@@ -8,7 +8,7 @@ class SlackAPI {
         };
         request(options, (error, response, body) => {
             if (error) {
-                // handle errors as you see fit
+                logger.info(error);
             }
         })
     }

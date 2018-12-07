@@ -1,17 +1,15 @@
-let express = require('express');
-let app = express();
-let bodyParser = require('body-parser');
-let request = require('request');
+let express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    request = require('request');
 
 const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
+const airtableapi = require('./routes/airtable.js');
 const metric = require('./routes/metrics.js');
-let questions_count = 0;
-let max_question = 4;
-let selected_pms_for_the_task = [];
-let followers = [];
-let programmers = [];
-let previous_question = '';
+let questions_count = 0, max_question = 4, selected_pms_for_the_task = [];
+let followers = [], programmers = [], previous_question = '';
+let task_name = '';
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -22,7 +20,7 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    if(questions_count <= max_question){
+    if (questions_count <= max_question) {
         let actionJSONPayload = JSON.parse(req.body.payload);
 
         logger.info(JSON.stringify(actionJSONPayload));
@@ -39,9 +37,11 @@ app.post('/slack/actions', (req, res) => {
             case 'metric_rating':
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
                 questions_count++;
-                if(questions_count <= max_question) {
+                logger.info("count" + questions_count);
+                if (questions_count <= max_question) {
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
-                }else{
+                } else {
+                    airtableapi.create(JSON.parse(metric.getMetrics()));
                     slackapi.sayThanks(selected_pms_for_the_task, 4);
                 }
                 break;
@@ -53,6 +53,7 @@ app.post('/slack/actions', (req, res) => {
                 logger.info('default');
         }
         logger.info(metric.getMetrics());
+
     }
 
 });
@@ -84,6 +85,11 @@ app.post('/asana/receive-webhook', (req, res) => {
         if (!error && response.statusCode === 200) {
 
             let task_details = JSON.parse(body);
+
+            metric.setTask(task_details.data.name); //set task name
+            metric.setTimestamp(Date.now()); //set time stamp
+            metric.setProject(task_details.data.projects[0].name);
+
             task_details.data.followers.forEach(function (follower) {
                 followers.push(follower.name);
             });
@@ -119,9 +125,9 @@ app.post('/asana/receive-webhook', (req, res) => {
                         logger.info(follower);
                         if (pms[follower] !== undefined) {
                             selected_pms_for_the_task.push(pms[follower]); //get the slack id of the PM
-                        }else{
+                        } else {
                             programmers.push({
-                                text : follower,
+                                text: follower,
                                 value: follower
                             });
                         }

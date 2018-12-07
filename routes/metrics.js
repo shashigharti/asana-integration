@@ -4,9 +4,21 @@ class Metrics {
         this.communication = 0;
         this.speed = 0;
         this.quality = 0;
+        this.project = 0;
+        this.task = 0;
+        this.timestamp = 0;
     }
     setName(name){
         this.name = name;
+    }
+    setTask(task){
+        this.task = task;
+    }
+    setTimestamp(timestamp){
+        this.timestamp = timestamp;
+    }
+    setProject(project){
+        this.project = project;
     }
     setMetricByType(type, value) {
         switch (type) {
