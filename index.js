@@ -85,67 +85,67 @@ app.post('/asana/receive-webhook', (req, res) => {
         if (!error && response.statusCode === 200) {
 
             let task_details = JSON.parse(body);
-            logger.info(task_details.completed === true);
 
-            metric.setTask(task_details.data.name); //set task name
-            metric.setTimestamp(Date.now()); //set time stamp
-            metric.setProject(task_details.data.projects[0].name);
+            if (task_details.completed === true) {
+                metric.setTask(task_details.data.name); //set task name
+                metric.setTimestamp(Date.now()); //set time stamp
+                metric.setProject(task_details.data.projects[0].name);
 
-            task_details.data.followers.forEach(function (follower) {
-                followers.push(follower.name);
-            });
+                task_details.data.followers.forEach(function (follower) {
+                    followers.push(follower.name);
+                });
 
-            followers.push('Elad Hefetz');   // For testing
-            logger.info(followers);
-            //let followers = ['Elad Hefetz', 'Shashi Gharti'];
+                followers.push('Elad Hefetz');   // For testing
+                logger.info(followers);
+                //let followers = ['Elad Hefetz', 'Shashi Gharti'];
 
-            // Configure the request
-            let options = {
-                url: config.airtable.base_url,
-                method: 'GET',
-                headers: config.airtable.headers
-            };
+                // Configure the request
+                let options = {
+                    url: config.airtable.base_url,
+                    method: 'GET',
+                    headers: config.airtable.headers
+                };
 
-            // Start the request
-            request(options, function (error, response, body) {
-                let pms = {};
-                //logger.info(JSON.stringify(body));
+                // Start the request
+                request(options, function (error, response, body) {
+                    let pms = {};
+                    //logger.info(JSON.stringify(body));
 
 
-                if (!error && response.statusCode === 200) {
-                    let pm_data = JSON.parse(body);
+                    if (!error && response.statusCode === 200) {
+                        let pm_data = JSON.parse(body);
 
-                    //map pms name with slack ids
-                    pm_data.records.forEach(function (pm) {
-                        pms[pm.fields["Name"]] = pm.fields["Slack ID"];
-                    });
-                    logger.info(JSON.stringify(pms));
-                    logger.info(followers);
+                        //map pms name with slack ids
+                        pm_data.records.forEach(function (pm) {
+                            pms[pm.fields["Name"]] = pm.fields["Slack ID"];
+                        });
+                        logger.info(JSON.stringify(pms));
+                        logger.info(followers);
 
-                    followers.forEach(function (follower) {
-                        logger.info(follower);
-                        if (pms[follower] !== undefined) {
-                            selected_pms_for_the_task.push(pms[follower]); //get the slack id of the PM
-                        } else {
-                            programmers.push({
-                                text: follower,
-                                value: follower
-                            });
-                        }
-                    });
+                        followers.forEach(function (follower) {
+                            logger.info(follower);
+                            if (pms[follower] !== undefined) {
+                                selected_pms_for_the_task.push(pms[follower]); //get the slack id of the PM
+                            } else {
+                                programmers.push({
+                                    text: follower,
+                                    value: follower
+                                });
+                            }
+                        });
 
-                    //log slack ids of PM
-                    //logger.info(selected_pms_for_the_task);
+                        //log slack ids of PM
+                        //logger.info(selected_pms_for_the_task);
 
-                    selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
-                    logger.info(selected_pms_for_the_task);
+                        selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
+                        logger.info(selected_pms_for_the_task);
 
-                    slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1);
-                    questions_count++;
+                        slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1);
+                        questions_count++;
 
-                }
-            });
-
+                    }
+                });
+            }
         }
     });
     res.send('success');
