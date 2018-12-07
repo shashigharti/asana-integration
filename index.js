@@ -57,26 +57,6 @@ app.post('/slack/actions', (req, res) => {
                         console.log(record.getId());
                     });
 
-
-
-
-                   /* let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
-                    base('Developers').create(JSON.stringify({
-                        "Name": metric.name,
-                        "Task": metric.task,// "https://app.asana.com/0/1/" + task_id,
-                        "Project": metric.project,
-                        "Quality": metric.quality,
-                        "Speed": metric.speed,
-                        "Communication": metric.communication,
-                        "Timestamp": metric.timestamp
-                    }), function (err, record) {
-                        if (err) {
-                            console.error(err);
-                            return;
-                        }
-                        logger.log(record.getId());
-                    });
-*/
                     logger.info('end');
                 }
                 break;
