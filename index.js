@@ -3,8 +3,9 @@ let app = express();
 let bodyParser = require('body-parser');
 let request = require('request');
 
-const hostname = '127.0.0.1';
-const port = 3000;
+let config = require('./config.js');
+/*const hostname = '127.0.0.1';
+const port = 3000;*/
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -188,4 +189,4 @@ function sendMessageToSlack(endPoint, message) {
     })
 }
 
-app.listen(port, hostname);
+app.listen(config.server.port, config.server.hostname);
