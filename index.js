@@ -20,7 +20,7 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    let actionJSONPayload = JSON.parse(req.body.payload)
+    let actionJSONPayload = JSON.parse(req.body.payload);
 
     logger.info(JSON.stringify(actionJSONPayload)); //testing
     logger.info(metric.getMetrics()); //testing
@@ -31,13 +31,12 @@ app.post('/slack/actions', (req, res) => {
     switch (type) {
         case 'active_programmer_selection':
             metric.setName(slackapi.getSelectedValue(type));
+            logger.info('testing');
             break;
         case 'metric_rating':
-            logger.info('metric_rating');
             metric.setMetricByType(previous_question, 1);
             break;
         case 'metric_type':
-            logger.info('metric_type');
             previous_question = 'communication';
             break;
         default:
