@@ -29,7 +29,7 @@ app.post('/slack/actions', (req, res) => {
         case 'active_programmer_selection':
             logger.info('active_programmer_selection');
             programmer_name =  actionJSONPayload.actions[0].selected_options[0];
-            logger.info(programmer_name);
+            logger.info(JSON.stringify(programmer_name));
 
             break;
         case 'metric_selection':
