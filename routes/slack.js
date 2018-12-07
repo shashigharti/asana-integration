@@ -38,7 +38,7 @@ class SlackAPI {
                 "attachments": attachments
             };
             logger.info(JSON.stringify(message));
-            slackapi.sendMessageToSlack(endPoint, message);
+            this.sendMessageToSlack(endPoint, message);
         });
         questions_count++;
     }
