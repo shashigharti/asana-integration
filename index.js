@@ -6,6 +6,7 @@ let request = require('request');
 const config = require('./config.js');
 const SlackAPI = require('./routes/slack.js');
 const Message = require('./routes/messages.js');
+let questions_count = 0;
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -19,6 +20,10 @@ app.post('/slack/actions', (req, res) => {
     // parse URL-encoded payload JSON string
     let actionJSONPayload = JSON.parse(req.body.payload)
     logger.info(JSON.stringify(actionJSONPayload));
+
+    //Add a new record in Airtable if all metrics are set
+
+
 
     switch (actionJSONPayload.callback_id) {
         case 'active_programmer_selection':
@@ -125,6 +130,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                         logger.info(JSON.stringify(message));
                         SlackAPI.sendMessageToSlack(endPoint, message);
                     });
+                    questions_count++;
                 }
             });
 
