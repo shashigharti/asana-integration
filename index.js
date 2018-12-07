@@ -24,11 +24,9 @@ app.post('/asana/receive-webhook', function (req, res) {
 
     // Configure the request
     let options = {
-        url: "https://app.asana.com/api/1.0/tasks/" + task_id,
+        url: config.asana.base_url + "/tasks/" + task_id,
         method: 'GET',
-        headers: {
-            'Authorization': 'Bearer 0/67d62f34ae5cc2ceb2c8a5216d4409d6'
-        }
+        headers: config.asana.headers
     };
 
     // Get followers of the task
@@ -49,11 +47,9 @@ app.post('/asana/receive-webhook', function (req, res) {
 
             // Configure the request
             let options = {
-                url: "https://api.airtable.com/v0/appohapUWdo5okapf/PM%20IDs",
+                url: config.airtable.base_url,
                 method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer keycEZ9iQvYuZDyMH'
-                }
+                headers: config.airtable.headers
             };
 
             // Start the request
@@ -86,7 +82,7 @@ app.post('/asana/receive-webhook', function (req, res) {
                     selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
                     logger.info(selected_pms_for_the_task);
 
-                    let endPoint = 'https://slack.com/api/chat.postMessage';
+                    let endPoint = config.slack.bot.post_message_url;
                     let attachments = [
                         {
                             "text": "Choose active programmer",

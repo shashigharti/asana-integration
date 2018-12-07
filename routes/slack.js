@@ -3,10 +3,7 @@ class SlackAPI {
         let options = {
             url: endPoint,
             method: 'POST',
-            headers: {
-                'Authorization': 'Bearer xoxb-495244200950-498222946918-8eGgrFVMF8HQ9SnuQ2fjReGJ',
-                'Content-Type': 'application/json'
-            },
+            headers: config.slack.bot.headers,
             json: message
         };
         request(options, (error, response, body) => {
