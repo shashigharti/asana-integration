@@ -20,32 +20,35 @@ app.post('/slack/actions', (req, res) => {
     // send respond with 200 status
     res.status(200).end();
 
-    let actionJSONPayload = JSON.parse(req.body.payload);
-
-    logger.info(JSON.stringify(actionJSONPayload)); //testing
-    logger.info(metric.getMetrics()); //testing
-
-    //Get Metric Type
-    let type = actionJSONPayload.callback_id;
-
-    switch (type) {
-        case 'active_programmer_selection':
-            metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
-            break;
-        case 'metric_rating':
-            metric.setMetricByType(previous_question, 1);
-            break;
-        case 'metric_type':
-            previous_question = 'communication';
-            break;
-        default:
-            logger.info('default');
-    }
-    logger.info(metric.getMetrics());
-
     if(questions_count <= max_question){
+        let actionJSONPayload = JSON.parse(req.body.payload);
+
+        logger.info(JSON.stringify(actionJSONPayload)); //testing
+        logger.info(metric.getMetrics()); //testing
+
+        //Get Metric Type
+        let type = actionJSONPayload.callback_id;
+
+        switch (type) {
+            case 'active_programmer_selection':
+                metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
+                slackapi.askQuestion(selected_pms_for_the_task, 2);
+                break;
+            case 'metric_rating':
+                metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
+                questions_count++;
+                slackapi.askQuestion(selected_pms_for_the_task, 2);
+                break;
+            case 'metric_type':
+                previous_question = slackapi.getSelectedValue(type, actionJSONPayload);
+                slackapi.askQuestion(selected_pms_for_the_task, 3);
+                break;
+            default:
+                logger.info('default');
+        }
+        logger.info(metric.getMetrics());
+
         slackapi.askQuestion(selected_pms_for_the_task, questions_count);
-        questions_count++;
     }
 
 });

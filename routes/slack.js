@@ -16,7 +16,6 @@ class SlackAPI {
         switch (type) {
             case 'active_programmer_selection':
                 logger.info('active_programmer_selection');
-                //logger.info(JSON.stringify(actionJSONPayload));
                 return actionJSONPayload.actions[0].selected_options[0].value;
             case 'metric_rating':
                 logger.info('metric_rating');
@@ -30,15 +29,10 @@ class SlackAPI {
     }
     askQuestion(pms, number){
         let endPoint = config.slack.bot.post_message_url;
-        let attachments = question.getQuestion(number);
         let message = '';
         let $this = this;
         pms.forEach(function (slack_id_of_pm) {
-            message = {
-                "text": "Who is the active programmer for project .....?",
-                "channel": slack_id_of_pm,
-                "attachments": attachments
-            };
+            message = question.getQuestion(number, slack_id_of_pm);
             logger.info(JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });
