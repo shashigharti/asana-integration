@@ -49,7 +49,7 @@ class SlackAPI {
             $this.sendMessageToSlack(endPoint, message);
         });
     }
-    sayThanks(){
+    sayThanks(pms, number){
         //logger.info('Say Thanks');
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
