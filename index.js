@@ -40,11 +40,12 @@ app.post('/slack/actions', (req, res) => {
                     logger.info("count" + questions_count);
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
-                    logger.info('last section');
+                    logger.info('last sectionn');
 
 
                     let base = new Airtable({apiKey: config.airtable.api_key}).base('appohapUWdo5okapf');
                     let data = JSON.parse(JSON.stringify(metric.getMetrics()));
+                    console.log(JSON.stringify(data));
 
                     base('Developers').create({
                         "Name": data.name,
