@@ -4,10 +4,12 @@ To setup webhook for Asana, follow the steps below:
 1. Setup a server and enable ssl(https).
 2. Create a webhook by running the command as described in the doc: https://asana.com/developers/api-reference/webhooks#create
 
-curl -H "Authorization: Bearer <personal_access_token>" \
--X POST https://app.asana.com/api/1.0/webhooks \
--d "resource=8675309" \
--d "target=https://example.com/receive-webhook/7654"
+    ```bash
+    curl -H "Authorization: Bearer <personal_access_token>" \
+    -X POST https://app.asana.com/api/1.0/webhooks \
+    -d "resource=8675309" \
+    -d "target=https://example.com/receive-webhook/7654"
+    ```
 
 
 POST /receive-webhook/7654
