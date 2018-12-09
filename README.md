@@ -11,7 +11,6 @@ To setup webhook for Asana, follow the steps below:
     -d "target=https://example.com/receive-webhook/7654"
     ```
 
-
     Once the validation is done, the events are sent to the specified url by asana.
 
 3. For personal access token generation, go to "My Profile Setting" ->Apps -> Manage Developers App -> Create new personal access token
