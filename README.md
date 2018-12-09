@@ -35,9 +35,9 @@ To get API Key of Airtable go to Airtable->account.
 1. config.js contains all the access tokens and configuration params.
 2. run npm install
 3. install pm2 (node process manager)
-4. index.js is the main file
+4. leaderboard.js is the main file
 5. To start the node server run
-pm2 start index.js
+pm2 start leaderboard.js
 
 ### Dependencies
 1. airtable
