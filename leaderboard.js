@@ -62,6 +62,8 @@ app.post('/slack/actions', (req, res) => {
 
 
 app.post('/asana/receive-webhook', (req, res) => {
+    logger.info('Webhook From Asana');
+    logger.info(JSON.stringify(req));
 
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
