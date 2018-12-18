@@ -4,7 +4,7 @@ class AirtableAPI {
         let dt = dateTime.create();
         let timestamp = dt.format('Y-m-d H:M:S');
 
-        base('Developers').create({
+        base(config.airtable.developers_sheet_name).create({
             "Name": metric.name,
             "Task": metric.task + " https://app.asana.com/0/1/" + task_id,
             "Project": metric.project,
