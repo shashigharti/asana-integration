@@ -14,7 +14,6 @@ class AirtableAPI {
             "Timestamp": timestamp
         }, function(err, record) {
             if (err) { console.error(err); return; }
-            console.log(record.getId());
         });
 
     }
