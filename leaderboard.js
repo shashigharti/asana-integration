@@ -106,7 +106,7 @@ app.post('/asana/receive-webhook', (req, res) => {
 
                     // Configure the request
                     let options = {
-                        url: config.airtable.base_url,
+                        url: config.airtable.base_url +  "/" + config.airtable.pms_sheet_name,
                         method: 'GET',
                         headers: config.airtable.headers
                     };
@@ -140,10 +140,10 @@ app.post('/asana/receive-webhook', (req, res) => {
                             });
 
                             //log slack ids of PM
-                            //logger.info(selected_pms_for_the_task);
+                            logger.info(selected_pms_for_the_task);
 
                             //selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
-                            logger.info(selected_pms_for_the_task);
+                            //logger.info(selected_pms_for_the_task);
 
                             slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
                             questions_count++;
