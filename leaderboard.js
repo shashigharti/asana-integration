@@ -155,7 +155,7 @@ app.post('/asana/receive-webhook', (req, res) => {
         });
     }
 
-    res.send('success');
+    res.status(200).send('success');
 });
 
 app.listen(config.server.port, config.server.hostname);
