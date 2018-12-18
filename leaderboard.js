@@ -63,17 +63,17 @@ app.post('/slack/actions', (req, res) => {
 
 app.post('/asana/receive-webhook', (req, res) => {
     logger.info('Webhook From Asana');
-    logger.info(JSON.stringify(req));
 
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
     if (secret !== undefined) {
         res.header('X-Hook-Secret', secret);
-        res.send('');
+        res.status(200).send("Ok"); return;
+
     }
 
     task_id = req.body.events[0].resource;
-    //logger.info(task_id);
+    logger.info(task_id);
 
     // Configure the request
     let options = {
