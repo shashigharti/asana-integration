@@ -63,6 +63,7 @@ app.post('/slack/actions', (req, res) => {
 
 app.post('/asana/receive-webhook', (req, res) => {
     logger.info('Webhook From Asana');
+    logger.info(JSON.stringify(req.body));
 
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
@@ -72,85 +73,88 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     }
 
-    task_id = req.body.events[0].resource;
-    logger.info(task_id);
+    if(req.body.events.length > 0){
+        task_id = req.body.events[0].resource;
+        logger.info(task_id);
 
-    // Configure the request
-    let options = {
-        url: config.asana.base_url + "/tasks/" + task_id,
-        method: 'GET',
-        headers: config.asana.headers
-    };
+        // Configure the request
+        let options = {
+            url: config.asana.base_url + "/tasks/" + task_id,
+            method: 'GET',
+            headers: config.asana.headers
+        };
 
-    // Get followers of the task
-    request(options, function (error, response, body) {
-        let selected_pm_for_the_task = [];
+        // Get followers of the task
+        request(options, function (error, response, body) {
+            let selected_pm_for_the_task = [];
 
-        if (!error && response.statusCode === 200) {
+            if (!error && response.statusCode === 200) {
 
-            let task_details = JSON.parse(body);
+                let task_details = JSON.parse(body);
 
-            if (task_details.data.completed === true) {
-                task = task_details.data.name;
-                metric.setTask(task); //set task name
-                metric.setTimestamp(Date.now()); //set time stamp
-                metric.setProject(task_details.data.projects[0].name);
+                if (task_details.data.completed === true) {
+                    task = task_details.data.name;
+                    metric.setTask(task); //set task name
+                    metric.setTimestamp(Date.now()); //set time stamp
+                    metric.setProject(task_details.data.projects[0].name);
 
-                task_details.data.followers.forEach(function (follower) {
-                    followers.push(follower.name);
-                });
+                    task_details.data.followers.forEach(function (follower) {
+                        followers.push(follower.name);
+                    });
 
-                logger.info(followers);
+                    logger.info(followers);
 
-                // Configure the request
-                let options = {
-                    url: config.airtable.base_url,
-                    method: 'GET',
-                    headers: config.airtable.headers
-                };
+                    // Configure the request
+                    let options = {
+                        url: config.airtable.base_url,
+                        method: 'GET',
+                        headers: config.airtable.headers
+                    };
 
-                // Start the request
-                request(options, function (error, response, body) {
-                    let pms = {};
-                    //logger.info(JSON.stringify(body));
+                    // Start the request
+                    request(options, function (error, response, body) {
+                        let pms = {};
+                        //logger.info(JSON.stringify(body));
 
 
-                    if (!error && response.statusCode === 200) {
-                        let pm_data = JSON.parse(body);
+                        if (!error && response.statusCode === 200) {
+                            let pm_data = JSON.parse(body);
 
-                        //map pms name with slack ids
-                        pm_data.records.forEach(function (pm) {
-                            pms[pm.fields["Name"]] = pm.fields["Slack ID"];
-                        });
-                        logger.info(JSON.stringify(pms));
-                        logger.info(followers);
+                            //map pms name with slack ids
+                            pm_data.records.forEach(function (pm) {
+                                pms[pm.fields["Name"]] = pm.fields["Slack ID"];
+                            });
+                            logger.info(JSON.stringify(pms));
+                            logger.info(followers);
 
-                        followers.forEach(function (follower) {
-                            logger.info(follower);
-                            if (pms[follower] !== undefined) {
-                                selected_pms_for_the_task.push(pms[follower]); //get the slack id of the PM
-                            } else {
-                                programmers.push({
-                                    text: follower,
-                                    value: follower
-                                });
-                            }
-                        });
+                            followers.forEach(function (follower) {
+                                logger.info(follower);
+                                if (pms[follower] !== undefined) {
+                                    selected_pms_for_the_task.push(pms[follower]); //get the slack id of the PM
+                                } else {
+                                    programmers.push({
+                                        text: follower,
+                                        value: follower
+                                    });
+                                }
+                            });
 
-                        //log slack ids of PM
-                        //logger.info(selected_pms_for_the_task);
+                            //log slack ids of PM
+                            //logger.info(selected_pms_for_the_task);
 
-                        //selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
-                        logger.info(selected_pms_for_the_task);
+                            //selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
+                            logger.info(selected_pms_for_the_task);
 
-                        slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
-                        questions_count++;
+                            slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
+                            questions_count++;
 
-                    }
-                });
+                        }
+                    });
+                }
             }
-        }
-    });
+        });
+    }
+
     res.send('success');
 });
 
