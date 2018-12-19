@@ -54,7 +54,7 @@ app.post('/slack/actions', (req, res) => {
                 } else {
                     logger.debug('last section');
                     airtableapi.create(task_id, metric);
-                    slackapi.sayThanks(pms, 4)
+                    slackapi.sayThanks(selected_pms_for_the_task, 4)
                     logger.info('Successfully Completed');
                 }
                 break;
