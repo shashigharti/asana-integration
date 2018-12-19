@@ -45,7 +45,7 @@ app.post('/slack/actions', (req, res) => {
                 } else {
                     logger.debug('last section');
                     airtableapi.create(task_id, metric);
-                    logger.debug('end');
+                    logger.info('Successfully Completed');
                 }
                 break;
             case 'metric_type':
@@ -69,14 +69,18 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
+    let max_hours = (config.log === "debug") ? config.test.hours : 2;
+    let completed_status = (config.log === "debug") ? config.test.completed_status : true;
+
     if (secret !== undefined) {
         res.header('X-Hook-Secret', secret);
-        res.status(200).send("Ok"); return;
+        res.status(200).send("Ok");
+        return;
 
     }
 
-    if(req.body.events.length > 0){
-        task_id = req.body.events[0].resource;
+    if (req.body.events.length > 0) {
+        task_id = (config.log === "debug") ? config.test.task_id : req.body.events[0].resource;
         logger.debug("task id:" + task_id);
 
         // Configure the request
@@ -100,15 +104,15 @@ app.post('/asana/receive-webhook', (req, res) => {
                 logger.debug("Task Status:" + task_details.data.completed);
 
                 //Get the actual hours
-                task_details.data.custom_fields.forEach(function(custom_field, index){
+                task_details.data.custom_fields.forEach(function (custom_field, index) {
                     logger.debug(custom_field);
-                    if(custom_field.name === "Hours Estimate"){
+                    if (custom_field.name === "Hours Estimate") {
                         estimated_hours = custom_field.number_value;
                         logger.debug("Estimated Hours:" + custom_field.number_value);
                     }
                 });
-                logger.info("task is completed and has estimated hours > 2:" + (task_details.data.completed === true && estimated_hours > 2));
-                if (task_details.data.completed === false && estimated_hours > 2) {
+                logger.info("task is completed and has estimated hours > " + max_hours + ":" + (task_details.data.completed === true && estimated_hours > 2));
+                if (task_details.data.completed === completed_status && estimated_hours > max_hours) {
                     task = task_details.data.name;
                     metric.setTask(task); //set task name
                     metric.setTimestamp(Date.now()); //set time stamp
@@ -124,7 +128,7 @@ app.post('/asana/receive-webhook', (req, res) => {
 
                     // Configure the request
                     let options = {
-                        url: config.airtable.base_url +  "/" + config.airtable.pms_sheet_name,
+                        url: config.airtable.base_url + "/" + config.airtable.pms_sheet_name,
                         method: 'GET',
                         headers: config.airtable.headers
                     };

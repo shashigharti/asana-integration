@@ -7,9 +7,13 @@ class Metrics {
         this.project = 0;
         this.task = 0;
         this.timestamp = 0;
+        this.skills_used = [];
     }
     setName(name){
         this.name = name;
+    }
+    setSkillsUsed(skill){
+        this.skills_used.push(skills_used);
     }
     setTask(task){
         this.task = task;

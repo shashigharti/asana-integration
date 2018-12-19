@@ -33,7 +33,7 @@ class SlackAPI {
     }
 
     askFirstQuestion(programmers, pms, number, task) {
-        //logger.info('Ask Question ' + number);
+        logger.debug('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
         let $this = this;
@@ -49,7 +49,7 @@ class SlackAPI {
     }
 
     askQuestion(pms, number) {
-        //logger.debug('Ask Question ' + number);
+        logger.debug('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
         let $this = this;
@@ -61,7 +61,7 @@ class SlackAPI {
     }
 
     sayThanks(pms, number) {
-        //logger.debug('Say Thanks');
+        logger.debug('Say Thanks');
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
         let $this = this;
