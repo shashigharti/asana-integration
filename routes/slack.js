@@ -12,7 +12,8 @@ class SlackAPI {
             }
         })
     }
-    getSelectedValue(type,actionJSONPayload){
+
+    getSelectedValue(type, actionJSONPayload) {
         switch (type) {
             case 'active_programmer_selection':
                 logger.info('active_programmer_selection');
@@ -27,18 +28,24 @@ class SlackAPI {
                 logger.info('default');
         }
     }
-    askFirstQuestion(programmers, pms, number, task){
+
+    askFirstQuestion(programmers, pms, number, task) {
         //logger.info('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
         let $this = this;
-        pms.forEach(function (slack_id_of_pm) {
+        let slack_id_of_pm = pms[0];
+        message = question.getFirstQuestion(programmers, slack_id_of_pm, number, task);
+        logger.info("message:" + JSON.stringify(message));
+        $this.sendMessageToSlack(endPoint, message);
+        /*pms.forEach(function (slack_id_of_pm) {
             message = question.getFirstQuestion(programmers, slack_id_of_pm, number, task);
             logger.info("message:" + JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
-        });
+        });*/
     }
-    askQuestion(pms, number){
+
+    askQuestion(pms, number) {
         //logger.info('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
@@ -49,7 +56,8 @@ class SlackAPI {
             $this.sendMessageToSlack(endPoint, message);
         });
     }
-    sayThanks(pms, number){
+
+    sayThanks(pms, number) {
         //logger.info('Say Thanks');
         let endPoint = config.slack.bot.post_message_url;
         let message = '';

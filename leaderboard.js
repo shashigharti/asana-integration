@@ -65,6 +65,7 @@ app.post('/asana/receive-webhook', (req, res) => {
     logger.info('Webhook From Asana');
     logger.info(JSON.stringify(req.body));
 
+
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
     if (secret !== undefined) {
@@ -75,7 +76,7 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     if(req.body.events.length > 0){
         task_id = req.body.events[0].resource;
-        logger.info(task_id);
+        logger.info("task id:" + task_id);
 
         // Configure the request
         let options = {
@@ -87,22 +88,26 @@ app.post('/asana/receive-webhook', (req, res) => {
         // Get followers of the task
         request(options, function (error, response, body) {
             let selected_pm_for_the_task = [];
+            logger.info(body);
 
             if (!error && response.statusCode === 200) {
 
                 let task_details = JSON.parse(body);
+                logger.info("Task Status:" + task_details.data.completed);
 
-                if (task_details.data.completed === true) {
+                if (task_details.data.completed === false) {
                     task = task_details.data.name;
                     metric.setTask(task); //set task name
                     metric.setTimestamp(Date.now()); //set time stamp
                     metric.setProject(task_details.data.projects[0].name);
 
+                    logger.info("Followers:" + JSON.stringify(task_details.data.followers));
+
                     task_details.data.followers.forEach(function (follower) {
                         followers.push(follower.name);
                     });
 
-                    logger.info(followers);
+                    logger.info("Followers:" + JSON.stringify(followers));
 
                     // Configure the request
                     let options = {
@@ -111,10 +116,11 @@ app.post('/asana/receive-webhook', (req, res) => {
                         headers: config.airtable.headers
                     };
 
+                    logger.info("Air table:" + JSON.stringify(options));
                     // Start the request
                     request(options, function (error, response, body) {
                         let pms = {};
-                        //logger.info(JSON.stringify(body));
+                        logger.info("Response from Air Table" + JSON.stringify(body));
 
 
                         if (!error && response.statusCode === 200) {
@@ -124,11 +130,10 @@ app.post('/asana/receive-webhook', (req, res) => {
                             pm_data.records.forEach(function (pm) {
                                 pms[pm.fields["Name"]] = pm.fields["Slack ID"];
                             });
-                            logger.info(JSON.stringify(pms));
-                            logger.info(followers);
+                            logger.info("ALL PMS:" + JSON.stringify(pms));
+                            logger.info("ALL Follower" + JSON.stringify(followers));
 
                             followers.forEach(function (follower) {
-                                logger.info(follower);
                                 if (pms[follower] !== undefined) {
                                     selected_pms_for_the_task.push(pms[follower]); //get the slack id of the PM
                                 } else {
@@ -140,11 +145,10 @@ app.post('/asana/receive-webhook', (req, res) => {
                             });
 
                             //log slack ids of PM
-                            logger.info(selected_pms_for_the_task);
+                            logger.info("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
+                            selected_pms_for_the_task = ["UEHMS7PNX"];
 
-                            //selected_pms_for_the_task = ['UEHMS7PNX']; //for testing
-                            //logger.info(selected_pms_for_the_task);
-
+                            logger.info("Ask First Question");
                             slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
                             questions_count++;
 
