@@ -1,5 +1,5 @@
 class Question {
-    getFirstQuestion(programmers, slack_id_of_pm, number, task){
+    getFirstQuestion(programmers, slack_id_of_pm, task){
         return {
             "text": "Who is the active programmer for " + task + "?",
             "channel": slack_id_of_pm,
@@ -15,6 +15,40 @@ class Question {
                             "text": "Pick a programmer...",
                             "type": "select",
                             "options": programmers
+                        }
+                    ]
+                }
+            ]
+        };
+    }
+    getSecondQuestion(programmers, slack_id_of_pm, task){
+        return {
+            "text": "Skills set used for " + task + "?",
+            "channel": slack_id_of_pm,
+            "attachments": [
+                {
+                    "text": "Skill Set",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    "callback_id": "skills_set_used",
+                    "actions": [
+                        {
+                            "name": "skills",
+                            "text": "Pick skills used ...",
+                            "type": "select",
+                            "options": [
+                                {
+                                    "name": "game",
+                                    "text": "Chess",
+                                    "type": "button",
+                                    "value": "chess"
+                                },
+                                {
+                                    "name": "game",
+                                    "text": "Falken's Maze",
+                                    "type": "button",
+                                    "value": "maze"
+                                }]
                         }
                     ]
                 }
