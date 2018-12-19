@@ -84,6 +84,8 @@ app.post('/asana/receive-webhook', (req, res) => {
             method: 'GET',
             headers: config.asana.headers
         };
+        logger.info("Asana:" + JSON.stringify(options));
+
 
         // Get followers of the task
         request(options, function (error, response, body) {
