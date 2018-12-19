@@ -4,7 +4,7 @@ module.exports = {
         port: 3008
     },
     asana:{
-        token: '',
+        token: '<token>',
         base_url: 'https://app.asana.com/api/1.0',
         headers: {
             'Authorization': 'Bearer <token>'
@@ -21,7 +21,7 @@ module.exports = {
 
     },
     airtable:{
-        base_url: "https://api.airtable.com/v0/appohapUWdo5okapf/Developers",
+        base_url: "https://api.airtable.com/v0/appohapUWdo5okapf",
         headers:{
             'Authorization': 'Bearer <token>',
             'Content-Type': 'application/json'
@@ -29,5 +29,5 @@ module.exports = {
         api_key: '<api_key>'
 
     },
-    debug: true
+    log: 'info' //set debug or info
 };

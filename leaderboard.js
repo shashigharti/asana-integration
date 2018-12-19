@@ -24,10 +24,11 @@ app.post('/slack/actions', (req, res) => {
     if (questions_count <= max_question) {
         let actionJSONPayload = JSON.parse(req.body.payload);
 
-        logger.info(JSON.stringify(actionJSONPayload));
+        logger.debug(JSON.stringify(actionJSONPayload));
 
         //Get Metric Type
         let type = actionJSONPayload.callback_id;
+        logger.info("Ask Question " + questions_count);
 
         //Set value and ask question based on step and user's reaction
         switch (type) {
@@ -39,12 +40,12 @@ app.post('/slack/actions', (req, res) => {
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
                 questions_count++;
                 if (questions_count < max_question) {
-                    logger.info("count" + questions_count);
+                    logger.debug("count" + questions_count);
                     slackapi.askQuestion(selected_pms_for_the_task, 2);
                 } else {
-                    logger.info('last section');
+                    logger.debug('last section');
                     airtableapi.create(task_id, metric);
-                    logger.info('end');
+                    logger.debug('end');
                 }
                 break;
             case 'metric_type':
@@ -52,9 +53,9 @@ app.post('/slack/actions', (req, res) => {
                 slackapi.askQuestion(selected_pms_for_the_task, 3);
                 break;
             default:
-                logger.info('default');
+                logger.debug('default');
         }
-        logger.info(metric.getMetrics());
+        logger.debug(metric.getMetrics());
 
     }
 
@@ -63,7 +64,7 @@ app.post('/slack/actions', (req, res) => {
 
 app.post('/asana/receive-webhook', (req, res) => {
     logger.info('Webhook From Asana');
-    logger.info(JSON.stringify(req.body));
+    logger.debug(JSON.stringify(req.body));
 
 
     //For webhook handshake with the server for the very first time while registering webhook
@@ -76,7 +77,7 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     if(req.body.events.length > 0){
         task_id = req.body.events[0].resource;
-        logger.info("task id:" + task_id);
+        logger.debug("task id:" + task_id);
 
         // Configure the request
         let options = {
@@ -84,32 +85,42 @@ app.post('/asana/receive-webhook', (req, res) => {
             method: 'GET',
             headers: config.asana.headers
         };
-        logger.info("Asana options:" + JSON.stringify(options));
+        logger.debug("Asana options:" + JSON.stringify(options));
 
 
         // Get followers of the task
         request(options, function (error, response, body) {
             let selected_pm_for_the_task = [];
-            logger.info(body);
+            logger.debug(body);
 
             if (!error && response.statusCode === 200) {
-
+                logger.info("Response received from Asana Status: 200");
                 let task_details = JSON.parse(body);
-                logger.info("Task Status:" + task_details.data.completed);
+                let estimated_hours = 0;
+                logger.debug("Task Status:" + task_details.data.completed);
 
-                if (task_details.data.completed === false) {
+                //Get the actual hours
+                task_details.data.custom_fields.forEach(function(custom_field, index){
+                    logger.debug(custom_field);
+                    if(custom_field.name === "Hours Estimate"){
+                        estimated_hours = custom_field.number_value;
+                        logger.debug("Estimated Hours:" + custom_field.number_value);
+                    }
+                });
+                logger.info("task is completed and has estimated hours > 2:" + (task_details.data.completed === true && estimated_hours > 2));
+                if (task_details.data.completed === false && estimated_hours > 2) {
                     task = task_details.data.name;
                     metric.setTask(task); //set task name
                     metric.setTimestamp(Date.now()); //set time stamp
                     metric.setProject(task_details.data.projects[0].name);
 
-                    logger.info("Followers:" + JSON.stringify(task_details.data.followers));
+                    logger.debug("Followers:" + JSON.stringify(task_details.data.followers));
 
                     task_details.data.followers.forEach(function (follower) {
                         followers.push(follower.name);
                     });
 
-                    logger.info("Followers:" + JSON.stringify(followers));
+                    logger.debug("Followers:" + JSON.stringify(followers));
 
                     // Configure the request
                     let options = {
@@ -118,22 +129,23 @@ app.post('/asana/receive-webhook', (req, res) => {
                         headers: config.airtable.headers
                     };
 
-                    logger.info("Air table:" + JSON.stringify(options));
+                    logger.debug("Air table:" + JSON.stringify(options));
                     // Start the request
                     request(options, function (error, response, body) {
                         let pms = {};
-                        logger.info("Response from Air Table" + JSON.stringify(body));
+                        logger.debug("Response from Air Table" + JSON.stringify(body));
 
 
                         if (!error && response.statusCode === 200) {
+                            logger.info("Response received from Air Table Status: 200");
                             let pm_data = JSON.parse(body);
 
                             //map pms name with slack ids
                             pm_data.records.forEach(function (pm) {
                                 pms[pm.fields["Name"]] = pm.fields["Slack ID"];
                             });
-                            logger.info("ALL PMS:" + JSON.stringify(pms));
-                            logger.info("ALL Follower" + JSON.stringify(followers));
+                            logger.debug("ALL PMS:" + JSON.stringify(pms));
+                            logger.debug("ALL Follower" + JSON.stringify(followers));
 
                             followers.forEach(function (follower) {
                                 if (pms[follower] !== undefined) {
@@ -147,7 +159,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                             });
 
                             //log slack ids of PM
-                            logger.info("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
+                            logger.debug("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
                             selected_pms_for_the_task = ["UEHMS7PNX"];
 
                             logger.info("Ask First Question");

@@ -8,7 +8,10 @@ class SlackAPI {
         };
         request(options, (error, response, body) => {
             if (error) {
-                logger.info(error);
+                logger.debug(error);
+            }else{
+                logger.info("Response from slack Status:200");
+
             }
         })
     }
@@ -16,16 +19,16 @@ class SlackAPI {
     getSelectedValue(type, actionJSONPayload) {
         switch (type) {
             case 'active_programmer_selection':
-                logger.info('active_programmer_selection');
+                logger.debug('active_programmer_selection');
                 return actionJSONPayload.actions[0].selected_options[0].value;
             case 'metric_rating':
-                logger.info('metric_rating');
+                logger.debug('metric_rating');
                 return actionJSONPayload.actions[0].value;
             case 'metric_type':
-                logger.info('metric_type');
+                logger.debug('metric_type');
                 return actionJSONPayload.actions[0].value;
             default:
-                logger.info('default');
+                logger.debug('default');
         }
     }
 
@@ -36,35 +39,35 @@ class SlackAPI {
         let $this = this;
         let slack_id_of_pm = pms[0];
         message = question.getFirstQuestion(programmers, slack_id_of_pm, number, task);
-        logger.info("message:" + JSON.stringify(message));
+        logger.debug("message:" + JSON.stringify(message));
         $this.sendMessageToSlack(endPoint, message);
         /*pms.forEach(function (slack_id_of_pm) {
             message = question.getFirstQuestion(programmers, slack_id_of_pm, number, task);
-            logger.info("message:" + JSON.stringify(message));
+            logger.debug("message:" + JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });*/
     }
 
     askQuestion(pms, number) {
-        //logger.info('Ask Question ' + number);
+        //logger.debug('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
         let $this = this;
         pms.forEach(function (slack_id_of_pm) {
             message = question.getQuestion(slack_id_of_pm, number);
-            logger.info("message:" + JSON.stringify(message));
+            logger.debug("message:" + JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });
     }
 
     sayThanks(pms, number) {
-        //logger.info('Say Thanks');
+        //logger.debug('Say Thanks');
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
         let $this = this;
         pms.forEach(function (slack_id_of_pm) {
             message = question.getQuestion(slack_id_of_pm, number);
-            logger.info("message:" + JSON.stringify(message));
+            logger.debug("message:" + JSON.stringify(message));
             $this.sendMessageToSlack(endPoint, message);
         });
     }
