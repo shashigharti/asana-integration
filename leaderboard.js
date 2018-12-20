@@ -33,6 +33,7 @@ app.post('/slack/actions', (req, res) => {
         //Set value and ask question based on step and user's reaction
         switch (type) {
             case 'active_programmer_selection':
+                console.log(selected_pms_for_the_task);
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
                 slackapi.askQuestion(selected_pms_for_the_task, 2);
 
@@ -174,7 +175,7 @@ app.post('/asana/receive-webhook', (req, res) => {
 
                             //log slack ids of PM
                             logger.debug("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
-                            selected_pms_for_the_task = ["UEHMS7PNX"];
+                            //selected_pms_for_the_task = ["UEHMS7PNX"];
 
                             logger.info("Ask First Question");
                             slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
