@@ -222,8 +222,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                                 logger.debug("Add New Session for " + task_id + JSON.stringify(sessions[task_id]));
                             }
 
-                            //an event listener
-                            emitter.once('slack-message-response-200-' + task_id, responseFromSlackListener);
+
                         }
                     });
                 }
@@ -233,13 +232,14 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     res.status(200).send('success');
 });
-
-function responseFromSlackListener(response) {
+//an event listener after slack response
+emitter.once('slack-message-response-200', function responseFromSlackListener(response) {
     logger.debug("slack-message-response-200 (ts):" + JSON.stringify(response));
     if (messages_map[response.body.ts] === undefined) {
         messages_map[response.body.ts] = {task_id: response.task_id};
     }
     logger.info("Messages Map:" + JSON.stringify(messages_map[response.body.ts]));
-}
+});
+
 app.listen(config.server.port, config.server.hostname);
 

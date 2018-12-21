@@ -11,9 +11,7 @@ class SlackAPI {
                 logger.debug(error);
             }else{
                 logger.info("Response from Slack for task_id " + task_id + " Status:200" + JSON.stringify(body));
-                logger.debug(emitter.listenerCount(emitter, 'slack-message-response-200-' + task_id));
-                emitter.emit('slack-message-response-200-' + task_id, {body:response.body, task_id: task_id});
-                logger.debug(emitter.listenerCount(emitter, 'slack-message-response-200-' + task_id));
+                emitter.emit('slack-message-response-200', {body:response.body, task_id: task_id});
             }
         });
     }
