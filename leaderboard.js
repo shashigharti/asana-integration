@@ -238,7 +238,6 @@ emitter.on('slack-message-response-200', function responseFromSlackListener(resp
     if (messages_map[response.body.ts] === undefined) {
         messages_map[response.body.ts] = {task_id: response.task_id};
     }
-    logger.info("Messages Map:" + JSON.stringify(messages_map[response.body.ts]));
 });
 
 app.listen(config.server.port, config.server.hostname);
