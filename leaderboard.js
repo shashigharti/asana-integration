@@ -9,10 +9,9 @@ const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
 const airtableapi = require('./routes/airtable.js');
 const metric = require('./routes/metrics.js');
-let questions_count = 0, max_question = 4, selected_pms_for_the_task = [];
-let followers = [], programmers = [], previous_question = '';
-let task = '', task_id = 0;
+
 let sessions = {};
+const max_question = 4;
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -38,9 +37,9 @@ app.post('/slack/actions', (req, res) => {
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
                 slackapi.askQuestion(selected_pms_for_the_task, 2);
 
-               /* logger.info("Ask Second Question");
-                slackapi.askSecondQuestion(programmers, selected_pms_for_the_task, 5, task);
-                questions_count++;*/
+                /* logger.info("Ask Second Question");
+                 slackapi.askSecondQuestion(programmers, selected_pms_for_the_task, 5, task);
+                 questions_count++;*/
 
                 break;
             case 'skills_set_used':
@@ -77,6 +76,10 @@ app.post('/slack/actions', (req, res) => {
 app.post('/asana/receive-webhook', (req, res) => {
     logger.info('Webhook From Asana');
     logger.debug(JSON.stringify(req.body));
+
+    let questions_count = 0, selected_pms_for_the_task = [];
+    let followers = [], programmers = [], previous_question = '';
+    let task = '', task_id = 0;
 
 
     //For webhook handshake with the server for the very first time while registering webhook
@@ -178,12 +181,19 @@ app.post('/asana/receive-webhook', (req, res) => {
                             logger.debug("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
                             //selected_pms_for_the_task = ["UEHMS7PNX"];
 
+                            //Register the session for the new task
+                            if (sessions[task_id] === undefined) {
+                                sessions[task_id] = {
+                                    questions_count: 0,
+                                    selected_pms_for_the_task: selected_pms_for_the_task,
+                                    followers: followers,
+                                    programmers: programmers,
+                                    previous_question: previous_question,
+                                    task: task,
+                                    task_id: task_id,
+                                };
+                            }
 
-                            //Create a session list
-                            let questions_count = 0, max_question = 4, selected_pms_for_the_task = [];
-                            let followers = [], programmers = [], previous_question = '';
-                            let task = '', task_id = 0;
-                            let sessions = {};
 
                             logger.info("Ask First Question");
                             slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
