@@ -24,7 +24,7 @@ app.post('/slack/actions', (req, res) => {
     let message_ts = JSON.parse(req.body.payload).message_ts;
     let session = sessions[messages_map[message_ts].task_id];
 
-    logger.debug('Current Session ' + JSON.stringify(session));
+    logger.info('Current Session ' + JSON.stringify(session));
 
     //delete old one
     logger.debug('Remove Old Message:' + JSON.stringify(message_ts));
@@ -47,11 +47,6 @@ app.post('/slack/actions', (req, res) => {
         //Set value and ask question based on step and user's reaction
         switch (type) {
             case 'active_programmer_selection':
-                console.log(session.selected_pms_for_the_task);
-                metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
-                slackapi.askQuestion(session.selected_pms_for_the_task, 2, session.task_id);
-                break;
-            case 'skills_set_used':
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
                 slackapi.askQuestion(session.selected_pms_for_the_task, 2, session.task_id);
                 break;

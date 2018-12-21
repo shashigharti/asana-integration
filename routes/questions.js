@@ -21,40 +21,6 @@ class Question {
             ]
         };
     }
-    getSecondQuestion(programmers, slack_id_of_pm, task){
-        return {
-            "text": "Skills set used for " + task + "?",
-            "channel": slack_id_of_pm,
-            "attachments": [
-                {
-                    "text": "Skill Set",
-                    "color": "#3AA3E3",
-                    "attachment_type": "default",
-                    "callback_id": "skills_set_used",
-                    "actions": [
-                        {
-                            "name": "skills",
-                            "text": "Pick skills used ...",
-                            "type": "select",
-                            "options": [
-                                {
-                                    "name": "game",
-                                    "text": "Chess",
-                                    "type": "button",
-                                    "value": "chess"
-                                },
-                                {
-                                    "name": "game",
-                                    "text": "Falken's Maze",
-                                    "type": "button",
-                                    "value": "maze"
-                                }]
-                        }
-                    ]
-                }
-            ]
-        };
-    }
     getQuestion(slack_id_of_pm, number) {
         switch (number) {
             case 2:
