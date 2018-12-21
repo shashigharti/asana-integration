@@ -1,5 +1,5 @@
 class SlackAPI {
-    sendMessageToSlack(endPoint, message) {
+    sendMessageToSlack(endPoint, message, task_id) {
         let options = {
             url: endPoint,
             method: 'POST',
@@ -11,8 +11,7 @@ class SlackAPI {
                 logger.debug(error);
             }else{
                 logger.info("Response from slack Status:200" + JSON.stringify(body));
-                emitter.emit('slack-message-response-200');
-                return body.ts;
+                emitter.emit('slack-message-response-200', {body:response, task_id: task_id});
             }
         });
     }
