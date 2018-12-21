@@ -232,7 +232,7 @@ app.post('/asana/receive-webhook', (req, res) => {
 });
 
 emitter.on('slack-message-response-200', (response) => {
-    logger.debug("Response from Slack (ts):" + JSON.stringify(response));
+    logger.debug("slack-message-response-200 (ts):" + JSON.stringify(response));
     if(messages_map[response.body.ts] === undefined){
         messages_map[response.body.ts] = response.task_id;
     }
