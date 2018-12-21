@@ -2,7 +2,7 @@ const {createLogger, format, transports} = require('winston');
 const fs = require('fs');
 const path = require('path');
 
-const env = process.env.NODE_ENV || 'development';
+//const env = process.env.NODE_ENV || 'development';
 const logDir = 'log';
 const config = require('./../../config.js');
 
@@ -14,6 +14,7 @@ if (!fs.existsSync(logDir)) {
 const filename = path.join(logDir, 'results.log');
 
 const logger = createLogger({
+    level: config.log,
     format: format.combine(
         format.timestamp({
             format: 'YYYY-MM-DD HH:mm:ss'
