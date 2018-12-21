@@ -30,7 +30,7 @@ app.post('/slack/actions', (req, res) => {
     logger.debug('Remove Old Message:' + JSON.stringify(message_ts));
     logger.debug('Message Map Before Deletion: ' + JSON.stringify(messages_map));
     delete messages_map[message_ts];
-    logger.debug('Message Map: ' + messages_map);
+    logger.debug('Message Map: ' + JSON.stringify(messages_map));
 
     // send respond with 200 status
     res.status(200).end();
