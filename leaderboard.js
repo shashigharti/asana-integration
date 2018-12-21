@@ -18,8 +18,7 @@ app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-w
 let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
-    logger.info('Response From Slack');
-    logger.debug('Response From Slack' + JSON.stringify(req.body));
+    logger.info('Message From Slack'  + JSON.stringify(req.body));
     let session = sessions["934407910754105"];
 
     // send respond with 200 status

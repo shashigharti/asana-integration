@@ -10,8 +10,7 @@ class SlackAPI {
             if (error) {
                 logger.debug(error);
             }else{
-                logger.info("Response from slack Status:200");
-
+                logger.info("Response from slack Status:200" + JSON.stringify(body));
             }
         })
     }
