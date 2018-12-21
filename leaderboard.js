@@ -236,7 +236,5 @@ function responseFromSlackListener(response) {
    logger.info("ts:" + JSON.stringify(response.body.ts));
    logger.info("Messages Map:" + JSON.stringify(messages_map[response.body.ts]));*/
 }
-
-emitter.removeAllListeners();
 app.listen(config.server.port, config.server.hostname);
 
