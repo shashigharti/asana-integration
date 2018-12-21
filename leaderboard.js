@@ -87,8 +87,8 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
-    let max_hours = (config.log === "test") ? config.test.hours : 2;
-    let completed_status = (config.log === "test") ? config.test.completed_status : true;
+    let max_hours = (config.mode === "test") ? config.test.hours : 2;
+    let completed_status = (config.mode === "test") ? config.test.completed_status : true;
 
     if (secret !== undefined) {
         res.header('X-Hook-Secret', secret);
@@ -98,7 +98,7 @@ app.post('/asana/receive-webhook', (req, res) => {
     }
 
     if (req.body.events.length > 0) {
-        task_id = (config.log === "test") ? config.test.task_id : req.body.events[0].resource;
+        task_id = (config.mode === "test") ? config.test.task_id : req.body.events[0].resource;
         logger.debug("task id:" + task_id);
 
         // Configure the request
@@ -182,7 +182,11 @@ app.post('/asana/receive-webhook', (req, res) => {
 
                             //log slack ids of PM
                             logger.debug("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
-                            //selected_pms_for_the_task = ["UEHMS7PNX"];
+
+                            //for testing purpose
+                            if(config.mode === "test"){
+                                selected_pms_for_the_task = ["UEHMS7PNX"];
+                            }
 
                             //Register the session for the new task
                             if (sessions[task_id] === undefined) {
