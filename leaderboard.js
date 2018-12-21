@@ -28,11 +28,6 @@ app.post('/slack/actions', (req, res) => {
     let session = sessions[messages_map[message_ts].task_id];
     logger.info('Current Session ' + JSON.stringify(session));
 
-    //delete old one
-    logger.debug('Remove Old Message:' + JSON.stringify(message_ts));
-    logger.debug('Message Map Before Deletion: ' + JSON.stringify(messages_map));
-    delete messages_map[message_ts];
-    logger.debug('Message Map After Deletion: ' + JSON.stringify(messages_map));
 
     // send respond with 200 status
     res.status(200).end();
@@ -51,6 +46,13 @@ app.post('/slack/actions', (req, res) => {
             case 'active_programmer_selection':
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
                 slackapi.askQuestion(session.selected_pms_for_the_task, 2, session.task_id);
+
+
+                //delete old one
+                logger.debug('Remove Old Message:' + JSON.stringify(message_ts));
+                logger.debug('Message Map Before Deletion: ' + JSON.stringify(messages_map));
+                delete messages_map[message_ts];
+                logger.debug('Message Map After Deletion: ' + JSON.stringify(messages_map));
                 break;
             case 'metric_rating':
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
@@ -70,6 +72,12 @@ app.post('/slack/actions', (req, res) => {
 
                     logger.info('Successfully Completed');
                 }
+
+                //delete old one
+                logger.debug('Remove Old Message:' + JSON.stringify(message_ts));
+                logger.debug('Message Map Before Deletion: ' + JSON.stringify(messages_map));
+                delete messages_map[message_ts];
+                logger.debug('Message Map After Deletion: ' + JSON.stringify(messages_map));
                 break;
             case 'metric_type':
                 previous_question = slackapi.getSelectedValue(type, actionJSONPayload);
@@ -79,7 +87,6 @@ app.post('/slack/actions', (req, res) => {
                 logger.debug('default');
         }
         logger.debug(metric.getMetrics());
-
     }
 
 });
