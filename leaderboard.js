@@ -11,6 +11,7 @@ const airtableapi = require('./routes/airtable.js');
 const metric = require('./routes/metrics.js');
 
 let sessions = {};
+let messages_map = {};
 const max_question = 4;
 
 app.use(bodyParser.json()); // for parsing application/json
@@ -19,7 +20,8 @@ let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
     logger.info('Message From Slack'  + JSON.stringify(req.body));
-    let session = sessions["934407910754105"];
+    let session = sessions[messages_map[res.message_ts]];
+    logger.info('Message From Slack'  + JSON.stringify(session));
 
     // send respond with 200 status
     res.status(200).end();
@@ -190,6 +192,8 @@ app.post('/asana/receive-webhook', (req, res) => {
                                 selected_pms_for_the_task = ["UEHMS7PNX"];
                             }
 
+                            logger.info("Ask First Question");
+                            let ts = slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
                             //Register the session for the new task
                             if (sessions[task_id] === undefined) {
                                 sessions[task_id] = {
@@ -199,14 +203,13 @@ app.post('/asana/receive-webhook', (req, res) => {
                                     programmers: programmers,
                                     previous_question: previous_question,
                                     task: task,
-                                    task_id: task_id,
+                                    task_id: task_id
                                 };
+                                if(messages_map[ts] === undefined){
+                                    messages_map[ts] = task_id;
+                                }
                                 logger.debug("Add New Session for " + "task_id" + JSON.stringify(sessions[task_id]));
                             }
-
-
-                            logger.info("Ask First Question");
-                            slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
                             questions_count++;
                         }
                     });

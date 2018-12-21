@@ -11,8 +11,9 @@ class SlackAPI {
                 logger.debug(error);
             }else{
                 logger.info("Response from slack Status:200" + JSON.stringify(body));
+                return body.ts;
             }
-        })
+        });
     }
 
     getSelectedValue(type, actionJSONPayload) {
