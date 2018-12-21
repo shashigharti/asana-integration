@@ -4,7 +4,7 @@ let express = require('express'),
     request = require('request')
 Airtable = require('airtable')
 dateTime = require('node-datetime'),
-emitter = require('./../app/utils/events.js');
+emitter = require('./app/utils/events.js');
 
 const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
