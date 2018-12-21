@@ -223,7 +223,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                             }
 
                             //an event listener
-                            emitter.on('slack-message-response-200-' + task_id, responseFromSlackListener);
+                            emitter.once('slack-message-response-200-' + task_id, responseFromSlackListener);
                         }
                     });
                 }
@@ -240,7 +240,6 @@ function responseFromSlackListener(response) {
         messages_map[response.body.ts] = {task_id: response.task_id};
     }
     logger.info("Messages Map:" + JSON.stringify(messages_map[response.body.ts]));
-    emitter.removeListener('slack-message-response-200-' + response.task_id);
 }
 emitter.removeAllListeners();
 app.listen(config.server.port, config.server.hostname);
