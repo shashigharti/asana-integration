@@ -11,6 +11,7 @@ class SlackAPI {
                 logger.debug(error);
             }else{
                 logger.info("Response from slack Status:200" + JSON.stringify(body));
+                emitter.emit('slack-message-response-200');
                 return body.ts;
             }
         });
@@ -80,9 +81,9 @@ class SlackAPI {
         });*/
     }
 }
-
 const question = require('./questions.js');
 const logger = require('./../app/utils/logger.js');
+const emitter = require('./../app/utils/events.js');
 const config = require('./../config.js');
 const request = require('request');
 module.exports = new SlackAPI();

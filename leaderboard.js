@@ -204,9 +204,8 @@ app.post('/asana/receive-webhook', (req, res) => {
                             }
 
                             logger.info("Ask First Question");
-                            let ts = slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
+                            slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
                             questions_count++;
-                            logger.debug("Response from Slack (ts):" + ts);
 
                             //Register the session for the new task
                             if (sessions[task_id] === undefined) {
@@ -219,13 +218,8 @@ app.post('/asana/receive-webhook', (req, res) => {
                                     task: task,
                                     task_id: task_id
                                 };
-                                if(messages_map[ts] === undefined){
-                                    messages_map[ts] = task_id;
-                                }
                                 logger.debug("Add New Session for " + "task_id" + JSON.stringify(sessions[task_id]));
                             }
-                            logger.info("Messages Map:" + JSON.stringify(messages_map));
-
                         }
                     });
                 }
@@ -236,4 +230,13 @@ app.post('/asana/receive-webhook', (req, res) => {
     res.status(200).send('success');
 });
 
+emitter.on('slack-message-response-200', (response) => {
+    logger.debug("Response from Slack (ts):" + JSON.stringify(response));
+    /*if(messages_map[ts] === undefined){
+        messages_map[ts] = task_id;
+    }*/
+    //logger.info("Messages Map:" + JSON.stringify(messages_map));
+});
+
 app.listen(config.server.port, config.server.hostname);
+const emitter = require('./../app/utils/events.js');
