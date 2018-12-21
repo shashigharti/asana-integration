@@ -2,8 +2,8 @@ let express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
     request = require('request')
-Airtable = require('airtable')
-dateTime = require('node-datetime'),
+    Airtable = require('airtable')
+    dateTime = require('node-datetime'),
     emitter = require('./app/utils/events.js');
 
 const config = require('./config.js');

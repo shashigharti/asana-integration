@@ -10,7 +10,7 @@ class SlackAPI {
             if (error) {
                 logger.debug(error);
             }else{
-                logger.info("Response from Slack Status:200" + JSON.stringify(body));
+                logger.info("Response from Slack for task_id " + task_id + " Status:200" + JSON.stringify(body));
                 emitter.emit('slack-message-response-200-' + task_id, {body:response.body, task_id: task_id});
             }
         });
