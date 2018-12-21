@@ -30,7 +30,7 @@ app.post('/slack/actions', (req, res) => {
     logger.debug('Remove Old Message:' + JSON.stringify(message_ts));
     logger.debug('Message Map Before Deletion: ' + JSON.stringify(messages_map));
     delete messages_map[message_ts];
-    logger.debug('Message Map: ' + JSON.stringify(messages_map));
+    logger.debug('Message Map After Deletion: ' + JSON.stringify(messages_map));
 
     // send respond with 200 status
     res.status(200).end();
@@ -49,37 +49,34 @@ app.post('/slack/actions', (req, res) => {
             case 'active_programmer_selection':
                 console.log(session.selected_pms_for_the_task);
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
-                slackapi.askQuestion(session.selected_pms_for_the_task, 2);
-
-                /* logger.info("Ask Second Question");
-                 slackapi.askSecondQuestion(programmers, selected_pms_for_the_task, 5, task);
-                 questions_count++;*/
-
+                slackapi.askQuestion(session.selected_pms_for_the_task, 2, session.task_id);
                 break;
             case 'skills_set_used':
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
-                slackapi.askQuestion(session.selected_pms_for_the_task, 2);
+                slackapi.askQuestion(session.selected_pms_for_the_task, 2, session.task_id);
                 break;
             case 'metric_rating':
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
                 sessions[session.task_id].questions_count++;
                 if (sessions[session.task_id].questions_count < max_question) {
                     logger.debug("count" + session.questions_count);
-                    slackapi.askQuestion(session.selected_pms_for_the_task, 2);
+                    slackapi.askQuestion(session.selected_pms_for_the_task, 2, session.task_id);
                 } else {
                     logger.debug('last section');
                     airtableapi.create(session.task_id, metric);
                     slackapi.sayThanks(session.selected_pms_for_the_task, 4);
 
                     logger.debug("Remove Session for task:" + session.task_id);
+                    logger.debug("Session Before Deletion:" + JSON.stringify(session));
                     delete sessions[session.task_id];
-                    logger.debug("Remaining Session:" + JSON.stringify(session.task_id));
+                    logger.debug("Session After Deletion:" + JSON.stringify(session));
+
                     logger.info('Successfully Completed');
                 }
                 break;
             case 'metric_type':
                 previous_question = slackapi.getSelectedValue(type, actionJSONPayload);
-                slackapi.askQuestion(sessions[session.task_id].selected_pms_for_the_task, 3);
+                slackapi.askQuestion(session.selected_pms_for_the_task, 3, session.task_id);
                 break;
             default:
                 logger.debug('default');
