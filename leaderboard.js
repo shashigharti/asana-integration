@@ -23,7 +23,7 @@ app.post('/slack/actions', (req, res) => {
     let session = sessions[messages_map[req.message_ts]];
     logger.info('Current Session' +  JSON.stringify(session));
 
-    logger.info(JSON.stringify(messages_map));
+    logger.info("Messages Map:" + JSON.stringify(messages_map));
 
     //delete old one
     logger.info('Remove Old Message:' +  req.message_ts);
@@ -205,10 +205,12 @@ app.post('/asana/receive-webhook', (req, res) => {
 
                             logger.info("Ask First Question");
                             let ts = slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
+                            questions_count++;
+
                             //Register the session for the new task
                             if (sessions[task_id] === undefined) {
                                 sessions[task_id] = {
-                                    questions_count: 0,
+                                    questions_count: questions_count,
                                     selected_pms_for_the_task: selected_pms_for_the_task,
                                     followers: followers,
                                     programmers: programmers,
@@ -221,7 +223,8 @@ app.post('/asana/receive-webhook', (req, res) => {
                                 }
                                 logger.debug("Add New Session for " + "task_id" + JSON.stringify(sessions[task_id]));
                             }
-                            questions_count++;
+                            logger.info("Messages Map:" + JSON.stringify(messages_map));
+
                         }
                     });
                 }
