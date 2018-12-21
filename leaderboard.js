@@ -214,6 +214,8 @@ app.post('/asana/receive-webhook', (req, res) => {
                                 };
                                 logger.debug("Add New Session for " + "task_id" + JSON.stringify(sessions[task_id]));
                             }
+
+                            emitter.on('slack-message-response-200-' + task_id, responseFromSlackListener);
                         }
                     });
                 }
@@ -223,8 +225,7 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     res.status(200).send('success');
 });
-
-emitter.on('slack-message-response-200', (response) => {
+function responseFromSlackListener(response){
     logger.debug("slack-message-response-200 (ts):" + JSON.stringify(response));
     /*logger.info("messages_map[response.body.ts] === undefined : " + (messages_map[response.body.ts] === undefined));
     if (messages_map[response.body.ts] === undefined) {
@@ -232,7 +233,7 @@ emitter.on('slack-message-response-200', (response) => {
     }
     logger.info("ts:" + JSON.stringify(response.body.ts));
     logger.info("Messages Map:" + JSON.stringify(messages_map[response.body.ts]));*/
-});
+}
 
 app.listen(config.server.port, config.server.hostname);
 
