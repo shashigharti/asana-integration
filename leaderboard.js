@@ -23,6 +23,8 @@ app.post('/slack/actions', (req, res) => {
     let session = sessions[messages_map[req.message_ts]];
     logger.info('Current Session' +  JSON.stringify(session));
 
+    logger.info(JSON.stringify(messages_map));
+
     //delete old one
     logger.info('Remove Old Message:' +  req.message_ts);
     delete messages_map[req.message_ts];
