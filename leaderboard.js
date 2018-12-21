@@ -233,7 +233,7 @@ app.post('/asana/receive-webhook', (req, res) => {
     res.status(200).send('success');
 });
 //an event listener after slack response
-emitter.once('slack-message-response-200', function responseFromSlackListener(response) {
+emitter.on('slack-message-response-200', function responseFromSlackListener(response) {
     logger.debug("slack-message-response-200 (ts):" + JSON.stringify(response));
     if (messages_map[response.body.ts] === undefined) {
         messages_map[response.body.ts] = {task_id: response.task_id};
