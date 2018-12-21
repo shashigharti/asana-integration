@@ -70,8 +70,10 @@ app.post('/slack/actions', (req, res) => {
                     logger.debug('last section');
                     airtableapi.create(session.task_id, metric);
                     slackapi.sayThanks(session.selected_pms_for_the_task, 4);
-                    logger.debug("Removed Session" + JSON.stringify(sessions[session.task_id]));
+
+                    logger.debug("Remove Session for task:" + session.task_id);
                     delete sessions[session.task_id];
+                    logger.debug("Remaining Session:" + JSON.stringify(session.task_id));
                     logger.info('Successfully Completed');
                 }
                 break;
