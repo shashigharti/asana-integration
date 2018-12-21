@@ -198,7 +198,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                             }
 
                             logger.info("Ask First Question");
-                            slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
+                            slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task, task_id);
                             questions_count++;
 
                             //Register the session for the new task

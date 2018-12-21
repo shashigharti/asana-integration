@@ -32,7 +32,7 @@ class SlackAPI {
         }
     }
 
-    askFirstQuestion(programmers, pms, number, task) {
+    askFirstQuestion(programmers, pms, number, task, task_id) {
         logger.debug('Ask Question ' + number);
         let endPoint = config.slack.bot.post_message_url;
         let message = '';
@@ -40,7 +40,7 @@ class SlackAPI {
         let slack_id_of_pm = pms[0];
         message = question.getFirstQuestion(programmers, slack_id_of_pm, task);
         logger.debug("message:" + JSON.stringify(message));
-        return $this.sendMessageToSlack(endPoint, message);
+        $this.sendMessageToSlack(endPoint, message, task_id);
         /*pms.forEach(function (slack_id_of_pm) {
             message = question.getFirstQuestion(programmers, slack_id_of_pm, number, task);
             logger.debug("message:" + JSON.stringify(message));
@@ -56,7 +56,7 @@ class SlackAPI {
         let slack_id_of_pm = pms[0];
         message = question.getQuestion(slack_id_of_pm, number);
         logger.debug("message:" + JSON.stringify(message));
-        return $this.sendMessageToSlack(endPoint, message);
+        $this.sendMessageToSlack(endPoint, message);
         /*pms.forEach(function (slack_id_of_pm) {
             message = question.getQuestion(slack_id_of_pm, number);
             logger.debug("message:" + JSON.stringify(message));
