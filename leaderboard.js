@@ -18,6 +18,9 @@ app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-w
 let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
+    let current_session = sessions["934407910754105"];
+    logger.debug(current_session);
+
     // send respond with 200 status
     res.status(200).end();
 
