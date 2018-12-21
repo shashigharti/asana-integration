@@ -206,7 +206,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                             logger.info("Ask First Question");
                             let ts = slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
                             questions_count++;
-                            console.log("Response from Slack (ts):" + ts);
+                            logger.debug("Response from Slack (ts):" + ts);
 
                             //Register the session for the new task
                             if (sessions[task_id] === undefined) {
