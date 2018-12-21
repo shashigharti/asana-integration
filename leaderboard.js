@@ -236,6 +236,7 @@ emitter.on('slack-message-response-200', (response) => {
     if(messages_map[response.body.ts] === undefined){
         messages_map[response.body.ts] = response.task_id;
     }
+    logger.info("ts:" + JSON.stringify(response.body.ts));
     logger.info("Messages Map:" + JSON.stringify(messages_map));
 });
 
