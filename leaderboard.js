@@ -20,14 +20,15 @@ app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-w
 let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
-    logger.info('Message From Slack ' + JSON.stringify(req.body));
+    logger.info('Message From Slack ' + req.body);
     logger.info(req.body.payload);
+
     let session = sessions[messages_map[req.body.payload.message_ts]];
     logger.info('Current Session ' + JSON.stringify(session));
 
     //delete old one
-    logger.info('Remove Old Message:' + req.message_ts);
-    delete messages_map[req.message_ts];
+    logger.info('Remove Old Message:' + req.body.payload.message_ts);
+    delete messages_map[req.body.payload.message_ts];
 
     // send respond with 200 status
     res.status(200).end();
