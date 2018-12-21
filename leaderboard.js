@@ -18,7 +18,8 @@ app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-w
 let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
-    logger.debug(JSON.stringify(sessions));
+    logger.info('Response From Slack');
+    logger.debug('Response From Slack' + JSON.stringify(req.body));
     let session = sessions["934407910754105"];
 
     // send respond with 200 status
@@ -59,7 +60,7 @@ app.post('/slack/actions', (req, res) => {
                     logger.debug('last section');
                     airtableapi.create(session.task_id, metric);
                     slackapi.sayThanks(session.selected_pms_for_the_task, 4);
-                    logger.debug("Remove Session" + JSON.stringify(sessions[task_id]));
+                    logger.debug("Removed Session" + JSON.stringify(sessions[task_id]));
                     delete sessions[session.task_id];
                     logger.info('Successfully Completed');
                 }
