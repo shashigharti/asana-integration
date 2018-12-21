@@ -212,7 +212,7 @@ app.post('/asana/receive-webhook', (req, res) => {
                                     task: task,
                                     task_id: task_id
                                 };
-                                logger.debug("Add New Session for " + "task_id" + JSON.stringify(sessions[task_id]));
+                                logger.debug("Add New Session for " + task_id + JSON.stringify(sessions[task_id]));
                             }
 
                             emitter.on('slack-message-response-200-' + task_id, responseFromSlackListener);
