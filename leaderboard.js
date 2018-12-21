@@ -23,8 +23,8 @@ app.post('/slack/actions', (req, res) => {
     logger.info('Message From Slack ' + JSON.stringify(req.body));
     let message_ts = JSON.parse(req.body.payload).message_ts;
     logger.debug(JSON.parse(req.body.payload).message_ts);
-    logger.debug(sessions);
-    logger.debug(messages_map[message_ts]);
+    logger.debug(JSON.stringify(sessions));
+    logger.debug(JSON.stringify(messages_map));
     let session = sessions[messages_map[message_ts].task_id];
     logger.info('Current Session ' + JSON.stringify(session));
 
