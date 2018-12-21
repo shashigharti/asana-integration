@@ -24,11 +24,13 @@ app.post('/slack/actions', (req, res) => {
     let message_ts = JSON.parse(req.body.payload).message_ts;
     let session = sessions[messages_map[message_ts].task_id];
 
-    logger.info('Current Session ' + JSON.stringify(session));
+    logger.debug('Current Session ' + JSON.stringify(session));
 
     //delete old one
-    logger.info('Remove Old Message:' + req.body.payload.message_ts);
-    delete messages_map[req.body.payload.message_ts];
+    logger.debug('Remove Old Message:' + message_ts);
+    logger.debug('Message Map Before Deletion: ' + messages_map);
+    delete messages_map[message_ts];
+    logger.debug('Message Map: ' + messages_map);
 
     // send respond with 200 status
     res.status(200).end();
