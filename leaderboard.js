@@ -80,8 +80,8 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     //For webhook handshake with the server for the very first time while registering webhook
     let secret = req.header('X-Hook-Secret');
-    let max_hours = (config.log === "debug") ? config.test.hours : 2;
-    let completed_status = (config.log === "debug") ? config.test.completed_status : true;
+    let max_hours = (config.log === "test") ? config.test.hours : 2;
+    let completed_status = (config.log === "test") ? config.test.completed_status : true;
 
     if (secret !== undefined) {
         res.header('X-Hook-Secret', secret);
@@ -91,7 +91,7 @@ app.post('/asana/receive-webhook', (req, res) => {
     }
 
     if (req.body.events.length > 0) {
-        task_id = (config.log === "debug") ? config.test.task_id : req.body.events[0].resource;
+        task_id = (config.log === "test") ? config.test.task_id : req.body.events[0].resource;
         logger.debug("task id:" + task_id);
 
         // Configure the request
