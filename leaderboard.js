@@ -2,8 +2,8 @@ let express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
     request = require('request')
-    Airtable = require('airtable')
-    dateTime = require('node-datetime'),
+Airtable = require('airtable')
+dateTime = require('node-datetime'),
     emitter = require('./app/utils/events.js');
 
 const config = require('./config.js');
@@ -226,17 +226,17 @@ app.post('/asana/receive-webhook', (req, res) => {
 
     res.status(200).send('success');
 });
-function responseFromSlackListener(response){
-    logger.debug("slack-message-response-200 (ts):" + JSON.stringify(response));
 
-   // emitter.removeListener('slack-message-response-200-' + task_id);
-    /*logger.info("messages_map[response.body.ts] === undefined : " + (messages_map[response.body.ts] === undefined));
-    if (messages_map[response.body.ts] === undefined) {
-        messages_map[response.body.ts].push({task_id: response.task_id});
-    }
-    logger.info("ts:" + JSON.stringify(response.body.ts));
-    logger.info("Messages Map:" + JSON.stringify(messages_map[response.body.ts]));*/
+function responseFromSlackListener(response) {
+    logger.debug("slack-message-response-200 (ts):" + JSON.stringify(response));
+    logger.info("messages_map[response.body.ts] === undefined : " + (messages_map[response.body.ts] === undefined));
+    /*if (messages_map[response.body.ts] === undefined) {
+       messages_map[response.body.ts].push({task_id: response.task_id});
+   }
+   logger.info("ts:" + JSON.stringify(response.body.ts));
+   logger.info("Messages Map:" + JSON.stringify(messages_map[response.body.ts]));*/
 }
+
 emitter.removeAllListeners();
 app.listen(config.server.port, config.server.hostname);
 
