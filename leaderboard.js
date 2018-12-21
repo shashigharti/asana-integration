@@ -20,7 +20,7 @@ let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
     logger.info('Message From Slack'  + JSON.stringify(req.body));
-    let session = sessions[messages_map[res.message_ts]];
+    let session = sessions[messages_map[req.message_ts]];
     logger.info('Message From Slack'  + JSON.stringify(session));
 
     // send respond with 200 status
