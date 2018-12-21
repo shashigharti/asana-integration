@@ -3,7 +3,8 @@ let express = require('express'),
     bodyParser = require('body-parser'),
     request = require('request')
 Airtable = require('airtable')
-dateTime = require('node-datetime');
+dateTime = require('node-datetime'),
+const emitter = require('./../app/utils/events.js');
 
 const config = require('./config.js');
 const slackapi = require('./routes/slack.js');
@@ -239,4 +240,4 @@ emitter.on('slack-message-response-200', (response) => {
 });
 
 app.listen(config.server.port, config.server.hostname);
-const emitter = require('./../app/utils/events.js');
+
