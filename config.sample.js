@@ -29,5 +29,5 @@ module.exports = {
         api_key: '<api_key>'
 
     },
-    log: 'info' //set debug or info
+    log: 'info' //set debug or info or test
 };

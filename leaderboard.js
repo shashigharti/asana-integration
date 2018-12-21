@@ -12,6 +12,7 @@ const metric = require('./routes/metrics.js');
 let questions_count = 0, max_question = 4, selected_pms_for_the_task = [];
 let followers = [], programmers = [], previous_question = '';
 let task = '', task_id = 0;
+let sessions = {};
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
@@ -176,6 +177,13 @@ app.post('/asana/receive-webhook', (req, res) => {
                             //log slack ids of PM
                             logger.debug("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
                             //selected_pms_for_the_task = ["UEHMS7PNX"];
+
+
+                            //Create a session list
+                            let questions_count = 0, max_question = 4, selected_pms_for_the_task = [];
+                            let followers = [], programmers = [], previous_question = '';
+                            let task = '', task_id = 0;
+                            let sessions = {};
 
                             logger.info("Ask First Question");
                             slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task);
