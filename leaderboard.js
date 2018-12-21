@@ -23,7 +23,7 @@ app.post('/slack/actions', (req, res) => {
     logger.info('Message From Slack ' + req.body);
     logger.info(req.body.payload);
 
-    let session = sessions[messages_map[req.body.payload.message_ts]];
+    let session = sessions[messages_map[req.body.payload.message_ts].task_id];
     logger.info('Current Session ' + JSON.stringify(session));
 
     //delete old one
