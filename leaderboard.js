@@ -21,7 +21,7 @@ let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
     logger.info('Message From Slack ' + JSON.stringify(req.body));
-    logger.info(req.body.payload.message_ts);
+    logger.info(req.body.payload);
     let session = sessions[messages_map[req.body.payload.message_ts]];
     logger.info('Current Session ' + JSON.stringify(session));
 
