@@ -18,27 +18,26 @@ app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-w
 let logger = require('./app/utils/logger.js');
 
 app.post('/slack/actions', (req, res) => {
-    let current_session = sessions["934407910754105"];
-    logger.debug(current_session);
+    logger.debug(JSON.stringify(sessions));
 
     // send respond with 200 status
     res.status(200).end();
 
-    if (questions_count <= max_question) {
+    if (sessions["934407910754105"].questions_count <= max_question) {
         let actionJSONPayload = JSON.parse(req.body.payload);
 
         logger.debug(JSON.stringify(actionJSONPayload));
 
         //Get Metric Type
         let type = actionJSONPayload.callback_id;
-        logger.info("Ask Question " + questions_count);
+        logger.info("Ask Question " + sessions["934407910754105"].questions_count);
 
         //Set value and ask question based on step and user's reaction
         switch (type) {
             case 'active_programmer_selection':
-                console.log(selected_pms_for_the_task);
+                console.log(sessions["934407910754105"].selected_pms_for_the_task);
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
-                slackapi.askQuestion(selected_pms_for_the_task, 2);
+                slackapi.askQuestion(sessions["934407910754105"].selected_pms_for_the_task, 2);
 
                 /* logger.info("Ask Second Question");
                  slackapi.askSecondQuestion(programmers, selected_pms_for_the_task, 5, task);
@@ -47,24 +46,24 @@ app.post('/slack/actions', (req, res) => {
                 break;
             case 'skills_set_used':
                 metric.setName(slackapi.getSelectedValue(type, actionJSONPayload));
-                slackapi.askQuestion(selected_pms_for_the_task, 2);
+                slackapi.askQuestion(sessions["934407910754105"].selected_pms_for_the_task, 2);
                 break;
             case 'metric_rating':
                 metric.setMetricByType(previous_question, slackapi.getSelectedValue(type, actionJSONPayload));
-                questions_count++;
-                if (questions_count < max_question) {
-                    logger.debug("count" + questions_count);
-                    slackapi.askQuestion(selected_pms_for_the_task, 2);
+                sessions["934407910754105"].questions_count++;
+                if (sessions["934407910754105"].questions_count < max_question) {
+                    logger.debug("count" + sessions["934407910754105"].questions_count);
+                    slackapi.askQuestion(sessions["934407910754105"].selected_pms_for_the_task, 2);
                 } else {
                     logger.debug('last section');
-                    airtableapi.create(task_id, metric);
-                    slackapi.sayThanks(selected_pms_for_the_task, 4)
+                    airtableapi.create(sessions["934407910754105"].task_id, metric);
+                    slackapi.sayThanks(sessions["934407910754105"].selected_pms_for_the_task, 4)
                     logger.info('Successfully Completed');
                 }
                 break;
             case 'metric_type':
                 previous_question = slackapi.getSelectedValue(type, actionJSONPayload);
-                slackapi.askQuestion(selected_pms_for_the_task, 3);
+                slackapi.askQuestion(sessions["934407910754105"].selected_pms_for_the_task, 3);
                 break;
             default:
                 logger.debug('default');
