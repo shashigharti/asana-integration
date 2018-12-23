@@ -139,10 +139,10 @@ app.post('/asana/receive-webhook', (req, res) => {
 
                 //Get the actual hours
                 task_details.data.custom_fields.forEach(function (custom_field, index) {
-                    logger.debug(custom_field);
+                    logger.debug(JSON.stringify(custom_field));
                     if (custom_field.name === "Hours Estimate") {
                         estimated_hours = custom_field.number_value;
-                        logger.debug("Estimated Hours:" + custom_field.number_value);
+                        logger.debug("Estimated Hours:" + JSON.stringify(custom_field.number_value));
                     }
                 });
                 logger.info("task is completed and has estimated hours > " + max_hours + ":" + (task_details.data.completed === true && estimated_hours > 2));
