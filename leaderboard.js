@@ -196,30 +196,38 @@ app.post('/asana/receive-webhook', (req, res) => {
                                 }
                             });
 
-                            //log slack ids of PM
-                            logger.debug("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
 
-                            //for testing purpose
-                            if (config.mode === "test") {
-                                selected_pms_for_the_task = ["UEHMS7PNX"];
+                            if (selected_pms_for_the_task.length == 0) {
+                                logger.debug("No PMs Found");
                             }
 
-                            logger.info("Ask First Question");
-                            slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task, task_id);
-                            questions_count++;
+                            if (selected_pms_for_the_task.length > 0) {
+                                //log slack ids of PM
+                                logger.debug("Selected PMS:" + JSON.stringify(selected_pms_for_the_task));
 
-                            //Register the session for the new task
-                            if (sessions[task_id] === undefined) {
-                                sessions[task_id] = {
-                                    questions_count: questions_count,
-                                    selected_pms_for_the_task: selected_pms_for_the_task,
-                                    followers: followers,
-                                    programmers: programmers,
-                                    previous_question: previous_question,
-                                    task: task,
-                                    task_id: task_id
-                                };
-                                logger.debug("Add New Session for " + task_id + JSON.stringify(sessions[task_id]));
+                                //for testing purpose
+                                if (config.mode === "test") {
+                                    selected_pms_for_the_task = ["UEHMS7PNX"];
+                                }
+
+                                logger.info("Ask First Question");
+                                slackapi.askFirstQuestion(programmers, selected_pms_for_the_task, 1, task, task_id);
+                                questions_count++;
+
+                                //Register the session for the new task
+                                if (sessions[task_id] === undefined) {
+                                    sessions[task_id] = {
+                                        questions_count: questions_count,
+                                        selected_pms_for_the_task: selected_pms_for_the_task,
+                                        followers: followers,
+                                        programmers: programmers,
+                                        previous_question: previous_question,
+                                        task: task,
+                                        task_id: task_id
+                                    };
+                                    logger.debug("Add New Session for " + task_id + JSON.stringify(sessions[task_id]));
+                                }
+
                             }
 
 
