@@ -158,8 +158,6 @@ app.post('/asana/receive-webhook', (req, res) => {
                         followers.push(follower.name);
                     });
 
-                    logger.debug("Followers:" + JSON.stringify(followers));
-
                     // Configure the request
                     let options = {
                         url: config.airtable.base_url + "/" + config.airtable.pms_sheet_name,
