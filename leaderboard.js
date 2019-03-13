@@ -135,17 +135,17 @@ app.post('/asana/receive-webhook', (req, res) => {
                 logger.info("Response received from Asana Status: 200");
                 let task_details = JSON.parse(body);
                 let estimated_hours = 0;
-                logger.debug("Task Status:" + task_details.data.completed);
+                logger.debug("Task Status Completed:" + task_details.data.completed);
 
                 //Get the actual hours
                 task_details.data.custom_fields.forEach(function (custom_field, index) {
                     logger.debug(JSON.stringify(custom_field));
-                    if (custom_field.name === "Hours Estimate") {
+                    if (custom_field.name === "Hours Estimation") {
                         estimated_hours = custom_field.number_value;
-                        logger.debug("Estimated Hours:" + JSON.stringify(custom_field.number_value));
+                        logger.debug("Hours Estimation:" + JSON.stringify(custom_field.number_value));
                     }
                 });
-                logger.info("task is completed and has estimated hours > " + max_hours + ":" + (task_details.data.completed === true && estimated_hours > 2));
+                logger.info("Task is completed and has estimated hours > " + max_hours + ":" + (task_details.data.completed === true && estimated_hours > 2));
                 if (task_details.data.completed === completed_status && estimated_hours > max_hours) {
                     task = task_details.data.name;
                     metric.setTask(task); //set task name
